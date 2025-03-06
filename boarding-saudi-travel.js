@@ -25,124 +25,179 @@ function closeSidebar() {
 
 
 
+// Canvas Background Animation
+/* const canvas = document.getElementById("neon_canvas");
+const ctx = canvas.getContext("2d");
 
-const section = document.querySelector(".wow_effect_section");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-function createFloatingElement() {
-    const element = document.createElement("div");
-    element.classList.add("floating_element");
+const particles = [];
+const particleCount = 100;
 
-    // Random position
-    const posX = Math.random() * window.innerWidth;
-    const posY = Math.random() * window.innerHeight;
-
-    // Random size (more variation)
-    const size = Math.random() * 80 + 30; // Min 30px, Max 110px
-    element.style.width = `${size}px`;
-    element.style.height = `${size}px`;
-
-    // Random animation duration (slower movement)
-    const duration = Math.random() * 6 + 4; // 4s to 10s
-    element.style.animationDuration = `${duration}s`;
-
-    // Random blur for depth effect
-    const blurValue = Math.random() * 3 + 1;
-    element.style.filter = `blur(${blurValue}px)`;
-
-    // Random opacity for some circles to be more visible
-    element.style.opacity = Math.random() * 0.6 + 0.4; // Between 0.4 and 1
-
-    element.style.left = `${posX}px`;
-    element.style.top = `${posY}px`;
-
-    section.appendChild(element);
-
-    // Remove after animation ends
-    setTimeout(() => {
-        element.remove();
-    }, duration * 1000);
+for (let i = 0; i < particleCount; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 3 + 1,
+        speedX: Math.random() * 1 - 1,
+        speedY: Math.random() * 1 - 1,
+        color: "#00eaff"
+    });
 }
 
-// Generate floating elements continuously
-setInterval(createFloatingElement, 800);
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x += p.speedX;
+        p.y += p.speedY;
 
+        if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-const words = [
-    "رحلات سياحية",
-    "تايلاند",
-    "تركيا",
-    "روسيا",
-    "سنغافورة",
-    "فرنسا",
-    "موريشيوس",
-    "مصر",
-    "ماليزيا",
-    "عروض سياحية",
-];
-
-let currentIndex = 1;
-const dynamicWordElement = document.getElementById("mughader_dynamic_word_switch");
-const lineTimerElement = document.getElementById("mughader_line_timer");
-
-// Ensure the initial word is visible
-dynamicWordElement.classList.add("visible");
-
-function updateTimerWidth() {
-    const wordWidth = dynamicWordElement.offsetWidth; // Get the width of the current word
-    const scaledWidth = wordWidth * 1; // Adjust width to 40% of the word's width (smaller)
-    lineTimerElement.style.width = `${scaledWidth}px`; // Set timer line width
-    lineTimerElement.style.margin = "0 auto"; // Center the timer under the text
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    requestAnimationFrame(animateParticles);
 }
 
-function resetTimer() {
-    lineTimerElement.style.transition = "none"; // Disable transition to reset instantly
-    lineTimerElement.style.width = "0"; // Reset width to 0
-    setTimeout(() => {
-        lineTimerElement.style.transition = "width 1.8s linear"; // Reapply transition
-        lineTimerElement.style.width = `${dynamicWordElement.offsetWidth * 1}px`; // Start animation
-    }, 50); // Small delay to ensure transition is reapplied
+animateParticles(); */
+
+
+
+
+
+
+
+
+
+
+/* First Section Background Design */
+const canvas = document.getElementById("neon_canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const stars = [];
+const lanterns = [];
+const starCount = 80;
+const lanternCount = 4;
+
+function createStars() {
+    for (let i = 0; i < starCount; i++) {
+        stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2 + 1,
+            opacity: Math.random() * 0.5 + 0.5,
+            speed: Math.random() * 0.2 + 0.1
+        });
+    }
 }
 
-function changeWord() {
-    // Fade out by removing 'visible' class
-    dynamicWordElement.classList.remove("visible");
-
-    setTimeout(() => {
-        // Change word
-        dynamicWordElement.innerText = words[currentIndex];
-        currentIndex = (currentIndex + 1) % words.length;
-
-        // Fade in by adding 'visible' class
-        dynamicWordElement.classList.add("visible");
-
-        // Update timer width
-        updateTimerWidth();
-    }, 300); // Match CSS fade duration
-
-    // Reset and start the timer line animation
-    resetTimer();
+function createLanterns() {
+    for (let i = 0; i < lanternCount; i++) {
+        lanterns.push({
+            baseX: (canvas.width / (lanternCount + 1)) * (i + 1),
+            y: canvas.height * 0.85,
+            swingRange: Math.random() * 5 + 5, // Increase sway range
+            angle: Math.random() * Math.PI
+        });
+    }
 }
 
-// Start the loop
-setInterval(changeWord, 1800); // Match the timer line animation duration
+let time = 0;
 
-// Adjust the timer width for the initial word
-updateTimerWidth();
-resetTimer(); // Start timer animation for the first word
+function drawCrescentMoon() {
+    const baseX = canvas.width - 150;
+    const moonY = 100;
+    const outerRadius = 50;
+    const innerRadius = 45;
+
+    // Stronger swaying movement
+    const swayX = Math.sin(time * 0.5) * 5; // Move left-right
+    const rotationAngle = Math.sin(time * 0.5) * 0.1; // Faster rocking effect
+
+    ctx.save(); // Save current state
+    ctx.translate(baseX + swayX, moonY); // Move to the moon's center
+    ctx.rotate(rotationAngle); // Apply faster rotation
+
+    ctx.fillStyle = "#FFD700";
+    ctx.shadowColor = "#FFD700";
+
+    ctx.beginPath();
+    ctx.arc(0, 0, outerRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+    ctx.globalCompositeOperation = "destination-out";
+
+    ctx.beginPath();
+    ctx.arc(20, -10, innerRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.globalCompositeOperation = "source-over";
+    ctx.restore(); // Restore original state
+}
+
+function drawStars() {
+    stars.forEach((star) => {
+        ctx.globalAlpha = star.opacity;
+        ctx.fillStyle = "#FFD700";
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "#FFD700";
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        star.opacity += star.speed * (Math.random() > 0.5 ? 1 : -1);
+        if (star.opacity < 0.3) star.opacity = 0.3;
+        if (star.opacity > 1) star.opacity = 1;
+    });
+}
+
+function drawLanterns() {
+    lanterns.forEach((lantern, index) => {
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "#FFA500";
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "#FFA500";
+
+        // Stronger swinging movement
+        let swayX = lantern.baseX + Math.sin(time * 0.6 + index) * lantern.swingRange;
+
+        ctx.beginPath();
+        ctx.rect(swayX - 10, lantern.y, 20, 40);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(swayX, lantern.y + 40, 10, 0, Math.PI * 2);
+        ctx.fill();
+    });
+}
+
+function animateCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawCrescentMoon();
+    drawStars();
+    drawLanterns();
+
+    time += 0.05; // Adjust speed
+
+    requestAnimationFrame(animateCanvas);
+}
+
+createStars();
+createLanterns();
+animateCanvas();
 
 
 
@@ -344,7 +399,21 @@ scrollToWhoAreWe = function (elementIdName) {
             behavior: "smooth"
         });
     }
+}
 
+
+function scrollToMiddleOfElement(className) {
+    const element = document.querySelector(`.${className}`);
+    if (element) {
+        const elementRect = element.getBoundingClientRect();
+        const absoluteElementTop = elementRect.top + window.scrollY;
+        const middlePosition = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+
+        window.scrollTo({
+            top: middlePosition,
+            behavior: 'smooth'
+        });
+    }
 }
 
 
@@ -412,51 +481,59 @@ window.addEventListener('scroll', () => {
 // create all offers content functionality
 const sectionData = [
     {
+        title: 'عروض عيد الفطر',
+        image_1: ['عروض-شركة-وقت-الصعود/عيد-الفطر/1.jpg', 'رحلة الشمال التركي - طرابزون | 7 أيام'],
+        image_2: ['عروض-شركة-وقت-الصعود/عيد-الفطر/2.jpg', 'رحلة تركيا - طرابزون | 7 أيام'],
+        image_3: ['عروض-شركة-وقت-الصعود/عيد-الفطر/3.jpg', 'رحلة روسيا - طرابزون | 7 أيام'],
+        image_4: ['عروض-شركة-وقت-الصعود/عيد-الفطر/4.jpg', 'رحلة جوريا - تبليسي | 5 أيام'],
+    },
+
+    {
         title: 'عروض تايلاند',
-        image_1: ['عروض-شركة-وقت-الصعود/عروض-تايلاند/1.jpg', 'جزيرة بوكيت & كوالالمبور - 6 أيام'],
-        image_2: ['عروض-شركة-وقت-الصعود/عروض-تايلاند/2.jpg', 'بوكيت & بالي - 6 أيام'],
-        image_3: ['عروض-شركة-وقت-الصعود/عروض-تايلاند/3.jpg', 'بانكوك & بوكيت - 9 أيام'],
+        image_1: ['عروض-شركة-وقت-الصعود/تايلاند/1.jpg', 'رحلة جزيرة بوكيت & كوالالمبور | 6 أيام'],
+        image_2: ['عروض-شركة-وقت-الصعود/تايلاند/2.jpg', 'رحلة بوكيت & بالي | 6 أيام'],
+        image_3: ['عروض-شركة-وقت-الصعود/تايلاند/3.jpg', 'رحلة بانكوك & بوكيت | 9 أيام'],
     },
 
     {
         title: 'عروض تركيا',
-        image_1: ['عروض-شركة-وقت-الصعود/عروض-تركيا/1.jpg', 'طرابزون & آيدر - 7 أيام'],
-        image_2: ['عروض-شركة-وقت-الصعود/عروض-تركيا/2.jpg', 'عرض تركيا | اسطنبول 6 أيام'],
+        image_1: ['عروض-شركة-وقت-الصعود/تركيا/1.jpg', 'رحلة طرابزون & آيدر | 7 أيام'],
+        image_2: ['عروض-شركة-وقت-الصعود/تركيا/2.jpg', 'رحلة تركيا | اسطنبول 6 أيام'],
     },
 
     {
         title: 'عروض روسيا',
-        image_1: ['عروض-شركة-وقت-الصعود/عروض-روسيا/1.jpg', 'عرض روسيا | موسكو 6 أيام'],
-        image_2: ['عروض-شركة-وقت-الصعود/عروض-روسيا/2.jpg', 'عرض روسيا | موسكو 6 أيام'],
+        image_1: ['عروض-شركة-وقت-الصعود/روسيا/1.jpg', 'رحلة روسيا | موسكو 6 أيام'],
+        image_2: ['عروض-شركة-وقت-الصعود/روسيا/2.jpg', 'رحلة روسيا | موسكو 6 أيام'],
     },
 
     {
         title: 'عروض سنغافورة',
-        image_1: ['عروض-شركة-وقت-الصعود/عروض-سنغافورة/1.jpg', 'عرض سنغافورة عائلي -  5 أيام'],
-        image_2: ['عروض-شركة-وقت-الصعود/عروض-سنغافورة/2.jpg', 'سنغافورة شهر عسل -  5 أيام'],
-        image_3: ['عروض-شركة-وقت-الصعود/عروض-سنغافورة/3.jpg', 'عرض سنغافورة عائلي -  5 أيام'],
+        image_1: ['عروض-شركة-وقت-الصعود/سنغافورة/1.jpg', 'رحلة سنغافورة عائلي | 5 أيام'],
+        image_2: ['عروض-شركة-وقت-الصعود/سنغافورة/2.jpg', 'رحلة سنغافورة شهر عسل | 5 أيام'],
+        image_3: ['عروض-شركة-وقت-الصعود/سنغافورة/3.jpg', 'رحلة سنغافورة عائلي | 5 أيام'],
     },
 
     {
         title: 'عروض فرنسا',
-        image_1: ['عروض-شركة-وقت-الصعود/عروض-فرنسا/1.jpg', 'عرض فرنسا إجازة العيد -  6 أيام'],
+        image_1: ['عروض-شركة-وقت-الصعود/فرنسا/1.jpg', 'رحلة فرنسا إجازة العيد | 6 أيام'],
     },
 
     {
         title: 'عروض موريشيوس',
-        image_1: ['عروض-شركة-وقت-الصعود/عروض-موريشيوس/1.jpg', 'عرض موريشيوس -  5 أيام'],
-        image_2: ['عروض-شركة-وقت-الصعود/عروض-موريشيوس/2.jpg', 'عرض موريشيوس -  5 أيام'],
+        image_1: ['عروض-شركة-وقت-الصعود/موريشيوس/1.jpg', 'رحلة موريشيوس | 5 أيام'],
+        image_2: ['عروض-شركة-وقت-الصعود/موريشيوس/2.jpg', 'رحلة موريشيوس | 5 أيام'],
     },
 
     {
         title: 'عروض مصر',
-        image_1: ['عروض-شركة-وقت-الصعود/عروض-مصر/1.jpg', 'عرض مصر | القاهرة 5 أيام'],
+        image_1: ['عروض-شركة-وقت-الصعود/مصر/1.jpg', 'رحلة مصر | القاهرة 5 أيام'],
     },
 
     {
         title: 'عروض ماليزيا',
-        image_1: ['عروض-شركة-وقت-الصعود/عروض-ماليزيا/1.jpg', 'سيلانجور & لنكاوي & كولالمبور'],
-        image_2: ['عروض-شركة-وقت-الصعود/عروض-ماليزيا/2.jpg', 'سيلانجور & لنكاوي & كولالمبور'],
+        image_1: ['عروض-شركة-وقت-الصعود/ماليزيا/1.jpg', 'رحلة سيلانجور & لنكاوي & كولالمبور'],
+        image_2: ['عروض-شركة-وقت-الصعود/ماليزيا/2.jpg', 'رحلة سيلانجور & لنكاوي & كولالمبور'],
     },
 ];
 
@@ -535,7 +612,7 @@ function openFullScreenImage(src, text) {
     const whatsappButton = document.createElement('a');
     whatsappButton.className = 'whatsapp_button';
     whatsappButton.innerText = 'إرسال هذا العرض';
-    whatsappButton.href = `https://wa.me/+966506411444?text=طلب%20حجز%20هذا%20العرض:%0A%0Ahttps://mohammed-website.github.io/boardingsauditravel/${encodeURIComponent(src)}`;
+    whatsappButton.href = `https://wa.me/+966506411444?text=💎%20طلب%20حجز%20عرض%20جديد%20💎%0A%0Aسلام%20عليكم،%20حاب%20أسأل%20عن%20عرض%0A*${encodeURIComponent(text)}*%0Aوحاب%20أعرف%20تفاصيل%20أكثر%20عن%20عروضكم%20المشابهة.%0A%0A🔗%20رابط%20صورة%20العرض:%0Ahttps://mohammed-website.github.io/boardingsauditravel/${encodeURIComponent(src)}%0A%0Aبإنتظار%20ردكم%20وشكرًا%20لكم`;
     fullScreenDiv.appendChild(whatsappButton);
 
     // Close on background click
@@ -547,11 +624,17 @@ function openFullScreenImage(src, text) {
 
     // Smooth close function
     function closeFullScreenImage() {
-        fullScreenDiv.classList.remove('visible'); // Trigger fade-out
-        setTimeout(() => fullScreenDiv.remove(), 300); // Remove element after fade-out
+        const fullScreenDiv = document.querySelector('.full_screen_container');
+        if (!fullScreenDiv) return;
 
 
-        document.body.style.overflow = ''; // Re-enable document scrolling
+        fullScreenDiv.style.opacity = '0';
+
+
+        setTimeout(() => {
+            fullScreenDiv.remove();
+            document.body.style.overflow = '';
+        }, 500);
     }
 }
 
