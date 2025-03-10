@@ -56,6 +56,11 @@
   direction: rtl;
 }
 
+:root {
+  --bg-color: #F0F4F8;
+  --text-color: #333333;
+}
+
 body {
   /* background: black; */
   background: white;
@@ -522,37 +527,35 @@ header.hidden {
 
 
 
-
 /* Section Styling */
 .neon_section {
-  position: relative;
-  width: 100%;
-  height: 50vh;
-  background: #0c0c0c;
+  width: 100vw; /* Full screen width */
+  background: var(--bg-color);
   overflow: hidden;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.background_image {
+  width: 100%;
+  height: 60vh;
+}
+
+
 /* Overlay */
 .neon_overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1;
 }
 
 /* Text Container */
 .neon_text_container {
   text-align: center;
-  color: #fff;
   z-index: 2;
   position: relative;
   padding: 20px;
@@ -563,15 +566,13 @@ header.hidden {
   font-size: 2.5rem;
   font-weight: bold;
   text-transform: uppercase;
-  text-shadow: 0 0 3px #00eaff, 0 0 3px #00eaff;
 }
 
 /* Subtitle Styling */
 .neon_subtitle {
   font-size: 1.2rem;
   margin-top: 10px;
-  color: #b0f5ff;
-  text-shadow: 0 0 3px #00eaff;
+  color: var(--text-color);
 }
 
 /* Button Styling */
@@ -590,37 +591,38 @@ header.hidden {
 
 .neon_button:hover {
   background: #005ec9;
-  box-shadow: 0 0 20px #0077ff;
   transform: scale(1.05);
 }
 
-/* Background Animation Canvas */
-#neon_canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
+/* Our Location Address Links */
+.our-location-address-div {
+  margin-top: 15px;
+  display: flex;
+  gap: 15px; /* Spacing between links */
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap; /* Ensures responsiveness on small screens */
 }
 
-/* Location Icon Styling */
-.wow_location_icon {
-  margin-left: 10px;
-  font-size: 1.5rem;
-  color: #00eaff;
+.our-location-address-div a {
+  font-size: 1rem;
+  padding: 5px 10px;
+  background: linear-gradient(135deg, #005ec9, #002a59);
+  color: white;
   text-decoration: none;
-  display: inline-block;
-  vertical-align: middle;
-  filter: drop-shadow(0 0 5px #00eaff);
-  transition: transform 0.2s ease-in-out, filter 0.3s ease-in-out;
+  border-radius: 30px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Glow Effect on Hover */
-.wow_location_icon:hover {
-  transform: scale(1.2);
-  filter: drop-shadow(0 0 15px #00eaff);
+.our-location-address-div a:hover {
+  transform: translateY(-2px);
 }
+
 
 
 
@@ -1369,10 +1371,6 @@ footer * {
 
 
 
-  .neon_section {
-    height: 45vh;
-  }
-
   .neon_text_container {
     width: 90vw;
     padding: 10px 2px;
@@ -1380,7 +1378,6 @@ footer * {
 
   .neon_title {
     font-size: 4.8vw;
-    text-shadow: 0 0 0.5vw #00eaff, 0 0 0.5vw #00eaff;
   }
 
 
@@ -1543,15 +1540,29 @@ footer * {
     font-size: 4.5vw;
   }
 
+  .background_image {
+    height: 100%;
+  }
+
   .wow_location_icon {
     margin-left: 0;
     font-size: 9vw;
   }
 
+  /* Our Location Address Links */
+.our-location-address-div {
+  margin-top: 5px;
+}
+
+  .our-location-address-div a {
+    padding: 1vw 2vw;
+    font-size: 3vw;
+  }
+
   .neon_button {
     margin-top: 5px;
-    padding: 2vw 3vw;
-    font-size: 4vw;
+    padding: 1vw 2vw;
+    font-size: 3vw;
   }
 
 
@@ -1728,11 +1739,8 @@ footer * {
 
 
 
-  /* Page Intro Section */
-  .neon_section {
-    height: 35vh;
-  }
 
+    /* First Section Subtitle Styling */
   .wow_effect_section {
     height: 35vh;
   }
@@ -1740,6 +1748,14 @@ footer * {
   .neon_text_container {
     width: 95vw;
     padding: 0 2px;
+  }
+
+  .our-location-address-div a {
+    font-size: 4vw;
+  }
+
+  .neon_button {
+    font-size: 4vw;
   }
 
 
