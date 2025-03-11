@@ -170,7 +170,7 @@ sendBtn.onclick = function () {
 
         let botResponse = `
                 <div class="chat response">
-                    <img src="مكتب-سياحي/مكتب-سياحي-بحريني.webp">
+                    <img src="مكتب-سياحي/مكتب-سياحي.webp">
                     <span class="new">...</span>
                 </div>
             `;
