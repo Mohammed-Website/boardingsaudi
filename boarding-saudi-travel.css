@@ -339,8 +339,10 @@ header.hidden {
   direction: rtl;
   display: flex;
   list-style: none;
-  gap: 20px; /* Space between items */
-  align-items: center; /* Ensures everything is centered */
+  gap: 20px;
+  /* Space between items */
+  align-items: center;
+  /* Ensures everything is centered */
   padding: 0;
   margin: 0;
 }
@@ -511,7 +513,8 @@ header.hidden {
 
 /* Section Styling */
 .neon_section {
-  width: 100vw; /* Full screen width */
+  width: 100vw;
+  /* Full screen width */
   background: var(--bg-color);
   overflow: hidden;
   display: flex;
@@ -580,10 +583,12 @@ header.hidden {
 .our-location-address-div {
   margin-top: 15px;
   display: flex;
-  gap: 15px; /* Spacing between links */
+  gap: 15px;
+  /* Spacing between links */
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap; /* Ensures responsiveness on small screens */
+  flex-wrap: wrap;
+  /* Ensures responsiveness on small screens */
 }
 
 .our-location-address-div a {
@@ -1246,6 +1251,7 @@ header.hidden {
 /* Footer Style */
 footer {
   width: 100vw;
+  padding: 100px 0;
   direction: ltr;
   background: rgb(225, 227, 226);
   display: flex;
@@ -1272,7 +1278,7 @@ footer {
 } */
 
 footer img {
-  width: 12rem;
+  width: 15rem;
 }
 
 footer * {
@@ -1515,9 +1521,9 @@ footer * {
   }
 
   /* Our Location Address Links */
-.our-location-address-div {
-  margin-top: 5px;
-}
+  .our-location-address-div {
+    margin-top: 5px;
+  }
 
   .our-location-address-div a {
     padding: 1vw 2vw;
@@ -1667,6 +1673,10 @@ footer * {
 
 
 
+  footer {
+    padding: 50px 0;
+  }
+
   footer img {
     width: 35vw;
   }
@@ -1698,7 +1708,7 @@ footer * {
 
 
 
-    /* First Section Subtitle Styling */
+  /* First Section Subtitle Styling */
   .wow_effect_section {
     height: 35vh;
   }

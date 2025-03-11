@@ -7,6 +7,8 @@ function toggleSidebar() {
     } else {
         sidebar.style.right = "0px"; // Show sidebar
         overlay.classList.add("active"); // Show overlay
+        document.addEventListener("click", outsideClickListener); // Add event listener
+        window.removeEventListener("scroll", handleScroll); // Disable scroll event
     }
 }
 
@@ -16,7 +18,38 @@ function closeSidebar() {
 
     sidebar.style.right = "-250px"; // Hide sidebar
     overlay.classList.remove("active"); // Hide overlay
+    document.removeEventListener("click", outsideClickListener); // Remove event listener
+    window.addEventListener("scroll", handleScroll); // Re-enable scroll event
 }
+
+function outsideClickListener(event) {
+    const sidebar = document.getElementById("mughader_mobile_sidebar");
+    
+    // Check if the clicked target is outside the sidebar and the menu button
+    if (!sidebar.contains(event.target) && !event.target.closest(".mughader_mobile_menu_icon")) {
+        closeSidebar();
+    }
+}
+
+// Scroll event handler
+function handleScroll() {
+    const currentScrollPosition = window.scrollY;
+    const header = document.getElementById("mughader_header");
+
+    if (currentScrollPosition > lastScrollPosition) {
+        // Scrolling down
+        header.classList.add("hidden");
+    } else {
+        // Scrolling up
+        header.classList.remove("hidden");
+    }
+
+    lastScrollPosition = currentScrollPosition;
+}
+
+// Attach scroll event initially
+let lastScrollPosition = 0;
+window.addEventListener("scroll", handleScroll);
 
 
 
@@ -294,23 +327,7 @@ function scrollToMiddleOfElement(className) {
 }
 
 
-/* Header show or hide based on scrolling */
-const header = document.getElementById('mughader_header');
-let lastScrollPosition = 0;
 
-window.addEventListener('scroll', () => {
-    const currentScrollPosition = window.scrollY;
-
-    if (currentScrollPosition > lastScrollPosition) {
-        // Scrolling down
-        header.classList.add('hidden');
-    } else {
-        // Scrolling up
-        header.classList.remove('hidden');
-    }
-
-    lastScrollPosition = currentScrollPosition;
-});
 
 
 
