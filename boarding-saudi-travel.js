@@ -622,7 +622,7 @@ function fetchReviews() {
                 </div>
 
                 <div class="indoforall_clint_rate_info_div indoforall_animate_on_scroll">
-                    <img src="مكتب-سياحي/مكتب-سياحي-بحريني.webp" alt="وقت الصعود للسفر والسياحة - مكتب سياحي" title="وقت الصعود للسفر والسياحة - مكتب سياحي">
+                    <img src="مكتب-سياحي/مكتب-سياحي.webp" alt="وقت الصعود للسفر والسياحة - مكتب سياحي" title="وقت الصعود للسفر والسياحة - مكتب سياحي">
                     <h4>${name}</h4>
                 </div>
 
