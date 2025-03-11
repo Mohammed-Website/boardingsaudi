@@ -327,7 +327,7 @@ header.hidden {
 
 /* Logo */
 .mughader_header_logo {
-  width: 12rem;
+  width: 13rem;
 }
 
 /* Navigation Links (Desktop) */
@@ -1278,7 +1278,7 @@ footer {
 } */
 
 footer img {
-  width: 15rem;
+  width: 16rem;
 }
 
 footer * {
@@ -1638,7 +1638,7 @@ footer * {
 
   /* Logo */
   .mughader_header_logo {
-    width: 35vw;
+    width: 40vw;
   }
 
 
@@ -1678,7 +1678,7 @@ footer * {
   }
 
   footer img {
-    width: 35vw;
+    width: 40vw;
   }
 }
 
