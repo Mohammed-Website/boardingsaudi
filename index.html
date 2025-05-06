@@ -14,6 +14,7 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <link rel="stylesheet" href="boarding-saudi-travel.css" />
+    <link rel="stylesheet" href="boarding-saudi-travel-create-offer.css" />
 
 
 </head>
@@ -121,9 +122,133 @@
                 <a onclick="scrollToMiddleOfElement('scrollable_section_title')" class="neon_button">تصفح العروض
                     السياحية</a>
 
+
+                <!-- الزر الرئيسي -->
+                <p class="neon_button" onclick="openModal()" class="bg-blue-600 text-white px-4 py-2 rounded">
+                    أنشئ عرضك السياحي
+                </p>
+
+
             </div>
         </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- الطبقة العلوية (المودال) -->
+    <div id="offerModal"
+        class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden transition-opacity duration-300 opacity-0 flex justify-center items-center">
+        <div class="modal-content" dir="rtl">
+            <button onclick="closeModal()" class="close-btn">&times;</button>
+
+
+
+            <div id="offersBar" class="hidden bg-gray-100 p-4 rounded shadow-lg max-w-lg w-full">
+                <h3 class="text-lg font-semibold mb-4">أكثر العروض طلباً:</h3>
+                <div id="offersList" class="space-y-2"></div>
+            </div>
+
+
+
+            <h2 class="text-xl font-bold mb-4">أنشئ عرضك السياحي الخاص</h2>
+
+            <!-- النموذج -->
+            <form id="offerForm" class="space-y-4">
+
+
+                <!-- نوع العرض -->
+                <div style="margin-bottom: 20px;">
+                    <p class="font-semibold">نوع العرض:</p>
+                    <select id="offerType" class="w-full border p-2 rounded" style="cursor: pointer;">
+                        <option value="شهر عسل">شهر عسل</option>
+                        <option value="عائلة">عائلة</option>
+                        <option value="شباب">شباب</option>
+                        <option value="بنات">بنات</option>
+                        <option value="اخرى">اخرى</option>
+                    </select>
+                </div>
+
+
+                <!-- عدد البالغين والأطفال -->
+                <div class="flex flex-col gap-2" style="margin-bottom: 20px;">
+                    <input type="number" id="adults" min="1" placeholder="عدد البالغين"
+                        class="w-full border p-2 rounded" required>
+                    <input type="number" id="children" min="0" placeholder="عدد الأطفال"
+                        class="w-full border p-2 rounded">
+                </div>
+
+                <!-- أعمار الأطفال -->
+                <div id="childrenAges" class="flex flex-wrap gap-2"></div>
+
+                <!-- تاريخ الذهاب وعدد الأيام -->
+                <div class="flex flex-col gap-2" style="margin-bottom: 20px;">
+                    <label for="departureDate">تاريخ المغادرة:</label>
+                    <input type="text" id="departureDate" placeholder="اختر التاريخ">
+
+                    <label>عدد الأيام:</label>
+                    <input type="number" id="totalDays" placeholder="عدد الأيام" class="w-full border p-2 rounded"
+                        required>
+                </div>
+
+                <p class="text-sm text-gray-600" style="margin-bottom: 20px;">تاريخ العودة: <span id="returnDate">-</span></p>
+
+                <!-- الوجهات -->
+                <input type="text" id="countries" placeholder="الدول المفضلة (افصل بينها بفاصلة)"
+                    class="w-full border p-2 rounded" required>
+                <input type="text" id="cities" placeholder="المدن المفضلة (افصل بينها بفاصلة)"
+                    class="w-full border p-2 rounded">
+
+                <!-- خيارات الباقة -->
+                <div style="margin-top: 20px;">
+                    <p class="font-semibold">تشمل الباقة:</p>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="فندق مع الإفطار" class="inclusion" checked> <span>فندق مع
+                            الإفطار</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="تذاكر داخلية" class="inclusion" checked> <span>تذاكر طيران
+                            داخلية</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="مواصلات مع إنترنت" class="inclusion" checked> <span>مواصلات مع
+                            إنترنت</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="تذاكر دولية" class="inclusion"> <span>تذاكر طيران دولية</span>
+                    </label>
+                </div>
+
+
+                <!-- ميزانية العرض -->
+                <div style="margin-bottom: 20px;">
+                    <p class="font-semibold">ميزانية العرض:</p>
+                    <select id="budgetType" class="w-full border p-2 rounded" style="cursor: pointer;">
+                        <option value="اقتصادي">اقتصادي</option>
+                        <option value="متوسط">متوسط</option>
+                        <option value="فاخر">فاخر</option>
+                    </select>
+                </div>
+
+                <!-- زر الإرسال -->
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded w-full">إرسال عبر واتساب</button>
+            </form>
+        </div>
+    </div>
+
+
+
 
 
 
@@ -288,7 +413,8 @@
     <footer id="mughader_footer">
 
         <img src="مكتب-سياحي/مكتب-سياحي-بحريني.webp" alt="مكتب سياحي - مغادر">
-        <p style="direction: rtl;">وقت الصعود للسفر والسياحة | Boarding Saudi Travel<br>جميع حقوق الطبع والنشر محفوظة 2025 ©</p>
+        <p style="direction: rtl;">وقت الصعود للسفر والسياحة | Boarding Saudi Travel<br>جميع حقوق الطبع والنشر محفوظة
+            2025 ©</p>
 
     </footer>
 
@@ -296,7 +422,13 @@
 
 
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
 
+
+
+    <script src="boarding-saudi-travel-create-offer.js"></script>
     <script src="boarding-saudi-travel.js"></script>
 
 </body>

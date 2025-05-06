@@ -24,7 +24,7 @@ function closeSidebar() {
 
 function outsideClickListener(event) {
     const sidebar = document.getElementById("mughader_mobile_sidebar");
-    
+
     // Check if the clicked target is outside the sidebar and the menu button
     if (!sidebar.contains(event.target) && !event.target.closest(".mughader_mobile_menu_icon")) {
         closeSidebar();
@@ -58,57 +58,45 @@ window.addEventListener("scroll", handleScroll);
 
 
 
-// Canvas Background Animation
-/* const canvas = document.getElementById("neon_canvas");
-const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
 
-const particles = [];
-const particleCount = 100;
+/* Code to reload the sounds to make sure there is no latency */
+let clickSoundEffect = new Audio('click.ogg');
+clickSoundEffect.preload = 'auto';
 
-for (let i = 0; i < particleCount; i++) {
-    particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 3 + 1,
-        speedX: Math.random() * 1 - 1,
-        speedY: Math.random() * 1 - 1,
-        color: "#00eaff"
-    });
-}
+let successSoundEffect = new Audio('success.ogg');
+successSoundEffect.preload = 'auto';
 
-function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+let errorSoundEffect = new Audio('error.ogg');
+errorSoundEffect.preload = 'auto';
 
-    for (let i = 0; i < particles.length; i++) {
-        let p = particles[i];
-        p.x += p.speedX;
-        p.y += p.speedY;
+let isSoundEffectCooldown = false; // Flag to manage cooldown
 
-        if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+function playSoundEffect(soundName) {
 
-        ctx.fillStyle = p.color;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
+    if (isSoundEffectCooldown) return; // If in cooldown, do nothing
+
+    isSoundEffectCooldown = true; // Set cooldown
+    setTimeout(() => {
+        isSoundEffectCooldown = false; // Reset cooldown after 150 milliseconds
+    }, 150);
+
+    // Play a sound effect only if the website is not muted
+    let soundEffect;
+
+    if (soundName === 'click') {
+        soundEffect = clickSoundEffect;
+    } else if (soundName === 'success') {
+        soundEffect = successSoundEffect;
+    } else if (soundName === 'error') {
+        soundEffect = errorSoundEffect;
     }
-    requestAnimationFrame(animateParticles);
+
+    if (soundEffect) {
+        soundEffect.currentTime = 0; // Ensure the audio plays from the start
+        soundEffect.play();
+    }
 }
-
-animateParticles(); */
-
-
-
-
-
-
-
-
 
 
 
