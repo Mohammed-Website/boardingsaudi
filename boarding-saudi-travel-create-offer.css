@@ -162,9 +162,8 @@
   margin-bottom: 20px;
 }
 
-#offersBar h3{
+#offersBar h3 {
   font-size: var(--title-font-size);
-  margin-right: 10px;
 }
 
 .offer-item {
@@ -181,7 +180,8 @@
   font-weight: bold;
   color: #333;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: var(--input-font-size);;
+  font-size: var(--input-font-size);
+  ;
 }
 
 .offer-item:hover {
@@ -216,7 +216,7 @@
 /* Media Query: Large screens use rem units for consistency */
 @media (max-width: 950px) {
   :root {
-    --modal-padding: 3vw 0;
+    --modal-padding: 1rem 0.5rem;
     --input-font-size: 2.5vw;
     --label-font-size: 2.5vw;
     --title-font-size: 2.5vw;
@@ -247,4 +247,3 @@
     width: 40vw;
   }
 }
-
