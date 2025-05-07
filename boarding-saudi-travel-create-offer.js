@@ -67,15 +67,16 @@ document.getElementById("offerForm").addEventListener("submit", function (e) {
     const countries = document.getElementById("countries").value;
     const cities = document.getElementById("cities").value;
     const inclusions = Array.from(document.querySelectorAll(".inclusion:checked")).map(cb => cb.value);
-    const offerType = document.getElementById("offerType").value;
+    const budgetType = document.getElementById("budgetType").value;
 
     let message = `مرحبًا، حاب اطلب عرض سياحي مخصص بناءً على التالي:\n\n`;
+    message += `\n💼 عدد المسافرين: ${adults} بالغ / ${children} طفل`;
     message += `👤 عدد المسافرين: ${adults} بالغ / ${children} طفل`;
     if (childAges.length > 0) message += ` (أعمارهم: ${childAges.join(', ')})`;
     message += `\n📅 تاريخ الذهاب: ${departure}\n🕒 عدد الأيام: ${totalDays}\n🔙 تاريخ العودة: ${returnDate}`;
     message += `\n🌍 الوجهات: ${countries} (${cities})`;
     message += `\n✈️ تشمل الباقة: ${inclusions.join(', ') || 'بدون'}`;
-    message += `\n💼 نوع العرض: ${offerType}\n\nيرجى تزويدي بأفضل عرض متوفر. شكرًا!`;
+    message += `\n💳 ميزانية العرض: ${budgetType}\n\nيرجى تزويدي بأفضل عرض متوفر. شكرًا!`;
 
     const encoded = encodeURIComponent(message);
     const phone = "+6282210081028"; // استبدل هذا برقمك
