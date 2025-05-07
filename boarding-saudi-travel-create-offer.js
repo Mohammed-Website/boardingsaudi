@@ -69,7 +69,7 @@ document.getElementById("offerForm").addEventListener("submit", function (e) {
     const inclusions = Array.from(document.querySelectorAll(".inclusion:checked")).map(cb => cb.value);
     const budgetType = document.getElementById("budgetType").value;
 
-    let message = `مرحبًا، حاب اطلب عرض سياحي مخصص بناءً على التالي:\n\n`;
+    let message = `أهلاً، حاب اطلب عرض سياحي مخصص بناءً على التالي:\n\n`;
     message += `\n💼 عدد المسافرين: ${adults} بالغ / ${children} طفل`;
     message += `👤 عدد المسافرين: ${adults} بالغ / ${children} طفل`;
     if (childAges.length > 0) message += ` (أعمارهم: ${childAges.join(', ')})`;
