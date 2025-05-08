@@ -68,10 +68,11 @@ document.getElementById("offerForm").addEventListener("submit", function (e) {
     const cities = document.getElementById("cities").value;
     const inclusions = Array.from(document.querySelectorAll(".inclusion:checked")).map(cb => cb.value);
     const budgetType = document.getElementById("budgetType").value;
+    const offerType = document.getElementById("offerType").value;
 
     let message = `أهلاً، حاب اطلب عرض سياحي مخصص بناءً على التالي:\n\n`;
-    message += `\n💼 عدد المسافرين: ${adults} بالغ / ${children} طفل`;
-    message += `👤 عدد المسافرين: ${adults} بالغ / ${children} طفل`;
+    message += `💼 نوع العرض: ${offerType}`;
+    message += `\n👤 عدد المسافرين: ${adults} بالغ / ${children} طفل`;
     if (childAges.length > 0) message += ` (أعمارهم: ${childAges.join(', ')})`;
     message += `\n📅 تاريخ الذهاب: ${departure}\n🕒 عدد الأيام: ${totalDays}\n🔙 تاريخ العودة: ${returnDate}`;
     message += `\n🌍 الوجهات: ${countries} (${cities})`;
