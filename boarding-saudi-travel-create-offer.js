@@ -71,7 +71,7 @@ document.getElementById("offerForm").addEventListener("submit", function (e) {
     const offerType = document.getElementById("offerType").value;
 
     let message = `أهلاً، حاب اطلب عرض سياحي مخصص بناءً على التالي:\n\n`;
-    message += `💼 نوع العرض: ${offerType}`;
+    message += `🧳 نوع العرض: ${offerType}`;
     message += `\n👤 عدد المسافرين: ${adults} بالغ / ${children} طفل`;
     if (childAges.length > 0) message += ` (أعمارهم: ${childAges.join(', ')})`;
     message += `\n📅 تاريخ الذهاب: ${departure}\n🕒 عدد الأيام: ${totalDays}\n🔙 تاريخ العودة: ${returnDate}`;
