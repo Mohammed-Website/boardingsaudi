@@ -1,5 +1,6 @@
 :root {
   --modal-padding: 1rem;
+  --offer-preset-padding: 1rem;
   --input-font-size: 1rem;
   --label-font-size: 1rem4vw;
   --title-font-size: 1rem5vw;
@@ -119,7 +120,7 @@
 
 #offerModal .close-btn {
   position: absolute;
-  top: 0.75rem;
+  top: 0.1px;
   left: 0.75rem;
   font-size: 2rem;
   color: #9ca3af;
@@ -171,7 +172,7 @@
   width: 170px;
   scroll-snap-align: start;
   border-radius: 12px;
-  padding: var(--modal-padding);
+  padding: var(--offer-preset-padding);
   border: 1px solid #ccc;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 5px 5px rgba(0, 0, 0, 0.05);
   cursor: pointer;
@@ -216,7 +217,8 @@
 /* Media Query: Large screens use rem units for consistency */
 @media (max-width: 950px) {
   :root {
-    --modal-padding: 1rem 0.5rem;
+    --modal-padding: 2.5rem 0.5rem;
+    --offer-preset-padding: 0.5rem 0.5rem;
     --input-font-size: 2.5vw;
     --label-font-size: 2.5vw;
     --title-font-size: 2.5vw;

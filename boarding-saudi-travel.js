@@ -1,3 +1,16 @@
+// Your Supabase credentials
+const supabaseUrl = "https://dkerfetnaquggtlpicul.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZXJmZXRuYXF1Z2d0bHBpY3VsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY3ODY5MDUsImV4cCI6MjA2MjM2MjkwNX0.GMEkAcx_SWTjV_TdlhQNXzIzh9mDM_L2h8SaLXllQsw"; // use public key
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+
+
+
+
+
+
+
+
 function toggleSidebar() {
     const sidebar = document.getElementById("mughader_mobile_sidebar");
     const overlay = document.getElementById("mughader_sidebar_overlay");
@@ -110,134 +123,6 @@ function playSoundEffect(soundName) {
 
 
 
-let chatbotIcon = document.getElementById("mughader_chatbot_icon");
-let chatSidebar = document.getElementById("mughader_chat_sidebar");
-let closeChat = document.getElementById("mughader_close_chat");
-let sendBtn = document.getElementById("mughader_send_btn");
-let messageBar = document.getElementById("mughader_message_bar");
-let messageBox = document.querySelector(".mughader_message_box");
-let chatOverlay = document.getElementById("mughader_chat_overlay");
-
-let API_URL = "https://api.openai.com/v1/chat/completions";
-let API_KEY = "sk-***76cA";
-
-/* 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 */
-
-// Check if the user is on a mobile device
-const isMobileDevice = /Mobi|Android/i.test(navigator.userAgent);
-
-// Open Slider if ai bot icon is clicked
-chatbotIcon.addEventListener("click", () => {
-    chatSidebar.classList.add("active");
-    chatOverlay.classList.add("active");
-});
-
-// Close Sidebar if close slider button is clicked
-closeChat.addEventListener("click", () => {
-    chatSidebar.classList.remove("active");
-    chatOverlay.classList.remove("active");
-});
-
-// Close Sidebar if Overlay is Clicked
-chatOverlay.addEventListener("click", () => {
-    chatSidebar.classList.remove("active");
-    chatOverlay.classList.remove("active");
-});
-
-// Send Message Function
-sendBtn.onclick = function () {
-    if (messageBar.value.trim() !== "") {
-        let UserTypedMessage = messageBar.value.trim();
-        messageBar.value = "";
-
-        let userMessage = `
-                <div class="chat message">
-                    <span>${UserTypedMessage}</span>
-                </div>
-            `;
-
-        let botResponse = `
-                <div class="chat response">
-                    <img src="مكتب-سياحي/مكتب-سياحي.webp">
-                    <span class="new">...</span>
-                </div>
-            `;
-
-        messageBox.insertAdjacentHTML("beforeend", userMessage);
-
-        setTimeout(() => {
-            messageBox.insertAdjacentHTML("beforeend", botResponse);
-
-            let requestOptions = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${API_KEY}`
-                },
-                body: JSON.stringify({
-                    model: "gpt-3.5-turbo",
-                    messages: [{ role: "user", content: UserTypedMessage }]
-                })
-            };
-
-            fetch(API_URL, requestOptions)
-                .then((res) => res.json())
-                .then((data) => {
-                    let ChatBotResponse = document.querySelector(".response .new");
-                    ChatBotResponse.innerHTML = data.choices[0].message.content;
-                    ChatBotResponse.classList.remove("new");
-                })
-                .catch(() => {
-                    let ChatBotResponse = document.querySelector(".response .new");
-                    ChatBotResponse.innerHTML = "الموقع مازال في وضع التجربة";
-                });
-        }, 100);
-
-
-
-        document.getElementById("mughader_message_bar").style.height = "40px"; // Reset to default height;
-    }
-};
-
-// Attach Send Message Function to Enter Key (for Desktop)
-if (!isMobileDevice) {
-    messageBar.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" && !event.shiftKey) {
-            event.preventDefault(); // Prevent default behavior
-            sendBtn.click();
-        } else if (event.key === "Enter" && event.shiftKey) {
-            event.preventDefault(); // Allow Shift+Enter to insert a new line
-            const cursorPosition = messageBar.selectionStart;
-            messageBar.value =
-                messageBar.value.substring(0, cursorPosition) + "\n" + messageBar.value.substring(cursorPosition);
-            messageBar.selectionStart = messageBar.selectionEnd = cursorPosition + 1; // Move cursor to the new line
-            messageBar.style.height = "auto"; // Reset height to auto
-            messageBar.style.height = `${messageBar.scrollHeight}px`; // Adjust height based on content
-        }
-    });
-}
-
-// Enable Enter for New Line Only (for Mobile)
-if (isMobileDevice) {
-    messageBar.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-            event.preventDefault(); // Prevent sending the message
-            const cursorPosition = messageBar.selectionStart;
-            messageBar.value =
-                messageBar.value.substring(0, cursorPosition) + "\n" + messageBar.value.substring(cursorPosition);
-            messageBar.selectionStart = messageBar.selectionEnd = cursorPosition + 1; // Move cursor to the new line
-            messageBar.style.height = "auto"; // Reset height to auto
-            messageBar.style.height = `${messageBar.scrollHeight}px`; // Adjust height based on content
-        }
-    });
-}
-
-// Adjust Textarea Height Dynamically
-messageBar.addEventListener("input", function () {
-    this.style.height = "auto"; // Reset height to auto
-    this.style.height = `${this.scrollHeight}px`; // Set height based on scroll height
-});
-
 // Handle Dynamic Text Direction
 document.querySelectorAll('.mughader_dynamic_direction_input_class').forEach(input => {
     input.addEventListener('input', function () {
@@ -264,10 +149,6 @@ document.querySelectorAll('.mughader_dynamic_direction_input_class').forEach(inp
 
 
 
-messageBar.addEventListener("input", function () {
-    this.style.height = "auto"; // Reset height to auto
-    this.style.height = `${this.scrollHeight}px`; // Set height based on scroll height
-});
 
 
 
@@ -554,84 +435,102 @@ createScrollableCardsSection(sectionData);
 
 
 
-/* Function for import all comments from google sheet */
 document.getElementById("indoforall_comment_form").addEventListener("submit", async function (event) {
-    event.preventDefault(); // Prevent page refresh
+    event.preventDefault();
+    console.log('Hi')
+    const button = document.querySelector("#indoforall_comment_form button[type='submit']");
 
-    let name = document.getElementById("indoforall_comment_username").value.trim();
+    // Disable button to prevent multiple submissions
+    button.disabled = true;
+    button.style.background = "gray";
+    button.innerText = "جاري النشر";
+
+    // Get input values
+    let reviewer_name = document.getElementById("indoforall_comment_username").value.trim();
     let comment = document.getElementById("indoforall_comment_text").value.trim();
-    let stars = document.getElementById("indoforall_comment_stars").value;
-
-
-    let formData = new URLSearchParams();
-    formData.append("name", name); // Match Google Apps Script keys
-    formData.append("comment", comment);
-    formData.append("stars", stars);
+    let stars = parseInt(document.getElementById("indoforall_comment_stars").value);
+    let review_date = new Date().toISOString().split("T")[0]; // format: YYYY-MM-DD
 
     try {
-        let response = await fetch("https://script.google.com/macros/s/AKfycbyBAJQhhVA5Uhxe2rrEZ4rjB0Ttn4SrYBptwjx47VZlxtgi3dENPfmNyAmrfL-QZpdEnQ/exec", {
-            method: "POST",
-            body: formData,
-        });
+        // Get the current highest ID
+        let { data: existingReviews, error: selectError } = await supabase
+            .from("customers_comments")
+            .select("id")
+            .order("id", { ascending: false })
+            .limit(1);
 
-        let data = await response.text();
+        if (selectError) throw selectError;
 
-        if (data === "Success") {
-            document.getElementById("indoforall_comment_form").reset();
+        let nextId = existingReviews.length ? existingReviews[0].id + 1 : 1;
 
-            await fetchReviews(); // Wait until fetchReviews() is fully executed
+        // Insert new review manually with the next ID
+        const { error: insertError } = await supabase.from("customers_comments").insert([{
+            id: nextId,
+            review_date,
+            reviewer_name,
+            comment,
+            stars
+        }]);
 
-            showSuccessNotification(); // Now run the notification function
-        }
+        if (insertError) throw insertError;
+
+        document.getElementById("indoforall_comment_form").reset();
+        await fetchReviews(); // Refresh UI
+        showSuccessNotification();
+
     } catch (error) {
+        console.error("Error submitting comment:", error.message);
+    } finally {
+        // Re-enable button
+        button.disabled = false;
+        button.style.background = "linear-gradient(to top, rgb(106, 75, 31), rgb(194, 156, 102))";
+        button.innerText = "إرسال";
     }
 });
 
 // Function to Fetch and Display Reviews
-function fetchReviews() {
-    fetch("https://script.google.com/macros/s/AKfycbyBAJQhhVA5Uhxe2rrEZ4rjB0Ttn4SrYBptwjx47VZlxtgi3dENPfmNyAmrfL-QZpdEnQ/exec")
-        .then(response => response.json())
-        .then(data => {
-            let indoforall_clint_rate_area = document.getElementById("indoforall_clint_rate_area");
-            indoforall_clint_rate_area.innerHTML = ""; // Clear old reviews
+async function fetchReviews() {
+    try {
+        const { data, error } = await supabase
+            .from('customers_comments')
+            .select('*')
+            .order('review_date', { ascending: false });
 
-            data.reverse().forEach(item => { // Reverse to show newest first
-                let { date, name, comment, starAmount } = item;
+        if (error) throw error;
 
-                // Skip any row where the comment is empty
-                if (!comment.trim()) return;
+        let indoforall_clint_rate_area = document.getElementById("indoforall_clint_rate_area");
+        indoforall_clint_rate_area.innerHTML = ""; // Clear old reviews
 
-                let clintRateDiv = document.createElement("div");
-                clintRateDiv.classList.add("indoforall_rate_div");
+        data.forEach(item => {
+            const { review_date, reviewer_name, comment, stars } = item;
 
-                clintRateDiv.innerHTML = `
-                <div class="indoforall_clint_rate_date_div indoforall_animate_on_scroll">
-                    <h3 class="indoforall_animate_on_scroll">${date}</h3>
+            if (!comment.trim()) return;
+
+            let clintRateDiv = document.createElement("div");
+            clintRateDiv.classList.add("indoforall_rate_div");
+
+            clintRateDiv.innerHTML = `
+                <div class="indoforall_clint_rate_date_div">
+                    <h3>${review_date}</h3>
                 </div>
-
-                <div class="indoforall_clint_rate_info_div indoforall_animate_on_scroll">
+                <div class="indoforall_clint_rate_info_div">
                     <img src="مكتب-سياحي/مكتب-سياحي.webp" alt="وقت الصعود للسفر والسياحة - مكتب سياحي" title="وقت الصعود للسفر والسياحة - مكتب سياحي">
-                    <h4>${name}</h4>
+                    <h4>${reviewer_name}</h4>
                 </div>
-
                 <div class="indoforall_clint_rate_comment_div">
                     <h5>${comment}</h5>
                 </div>
-
                 <div class="indoforall_clint_rate_star_div">
-                    ${"★".repeat(starAmount)}
+                    ${"★".repeat(stars)}${"☆".repeat(5 - stars)}
                 </div>
             `;
 
-                indoforall_clint_rate_area.appendChild(clintRateDiv);
-            });
+            indoforall_clint_rate_area.appendChild(clintRateDiv);
+        });
 
-            // Smooth appearance with delay
-            setTimeout(() => {
-                indoforall_clint_rate_area.classList.add("show");
-            }, 100);
-        })
-        .catch(error => console.error("Error fetching reviews:", error));
+    } catch (error) {
+        console.error("Error fetching reviews:", error.message);
+    }
 }
 
 // Function to Show Floating Success Notification
@@ -641,12 +540,12 @@ function showSuccessNotification() {
 
     setTimeout(() => {
         notification.style.opacity = "1";
-        notification.style.transform = "translateX(-50%) translateY(0px)"; // Move slightly up
+        notification.style.transform = "translateX(-50%) translateY(0px)";
     }, 10);
 
     setTimeout(() => {
         notification.style.opacity = "0";
-        notification.style.transform = "translateX(-50%) translateY(10px)"; // Move down slightly while fading out
+        notification.style.transform = "translateX(-50%) translateY(10px)";
         setTimeout(() => {
             notification.style.display = "none";
         }, 400);
@@ -654,7 +553,7 @@ function showSuccessNotification() {
 }
 
 // Fetch Reviews on Page Load
-fetchReviews();
+document.addEventListener('DOMContentLoaded', fetchReviews);
 
 
 
