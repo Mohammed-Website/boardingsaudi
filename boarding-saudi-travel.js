@@ -300,46 +300,165 @@ const sectionData = [
     },
 ];
 
-// Function to dynamically create the section
-function createScrollableCardsSection(dataArray) {
+// Function to create title cards
+function createTitleCards(dataArray) {
     const section = document.getElementById("scrollable_cards_section_id");
+    section.innerHTML = ''; // Clear existing content
 
-    dataArray.forEach((data) => {
-        const container = document.createElement('div');
-        container.className = 'scrollable_cards_container';
+    // Add main section title
+    const mainTitle = document.createElement('h2');
+    mainTitle.className = 'scrollable_section_title';
+    mainTitle.textContent = 'عروضنا الخاصة';
+    section.appendChild(mainTitle);
 
-        // Create the title
-        const title = document.createElement('h2');
-        title.className = 'scrollable_section_title';
-        title.innerText = data.title;
-        container.appendChild(title);
+    const titlesContainer = document.createElement('div');
+    titlesContainer.className = 'title_cards_container';
 
-        // Create the scrollable row
-        const scrollableRow = document.createElement('div');
-        scrollableRow.className = 'scrollable_cards_row';
+    dataArray.forEach((data, index) => {
+        const titleCard = document.createElement('div');
+        titleCard.className = 'title_card';
+        titleCard.dataset.index = index;
 
-        // Loop through the images and create cards
-        Object.keys(data).forEach((key) => {
-            if (key.startsWith('image_')) {
-                const [src, text] = data[key];
+        // Create card image (using first image from the set)
+        const firstImageKey = Object.keys(data).find(key => key.startsWith('image_'));
+        if (firstImageKey) {
+            const [src, text] = data[firstImageKey];
+            const img = document.createElement('img');
 
-                const card = document.createElement('div');
-                card.className = 'scrollable_card';
+            
+            img.src = `عروض-سياحية/${data.title
+                .replace(/^عروض\s*/g, '')  // Remove "عروض" and any following space
+                .replace(/\s+/g, '-')}.png`;
 
-                const img = document.createElement('img');
-                img.src = src;
-                img.alt = text;
-                img.addEventListener('click', () => openFullScreenImage(src, text)); // Pass text to full-screen function
-                card.appendChild(img);
 
-                scrollableRow.appendChild(card);
-            }
+            img.alt = 'رحلات-سياحية';
+            titleCard.appendChild(img);
+        }
+
+        // Create card title - Remove "عروض" from beginning
+        const title = document.createElement('h3');
+        const displayTitle = data.title.replace(/^عروض\s*/g, ''); // Remove "عروض" and any following space
+        title.textContent = displayTitle;
+        titleCard.appendChild(title);
+
+        titleCard.addEventListener('click', () => {
+            // Remove active class from all cards
+            document.querySelectorAll('.title_card').forEach(card => {
+                card.classList.remove('active');
+            });
+            // Add active class to clicked card
+            titleCard.classList.add('active');
+            // Show images for this title
+            showImagesForTitle(data);
         });
 
-        container.appendChild(scrollableRow);
-        section.appendChild(container);
+        titlesContainer.appendChild(titleCard);
+    });
+
+    section.appendChild(titlesContainer);
+}
+
+// Function to show images for a selected title with fade animations
+// Function to show images for a selected title with animation checks
+function showImagesForTitle(data) {
+    let imagesContainer = document.getElementById('scrollable_cards_container_id');
+
+    // Check if there's already a row being animated in or out
+    const animatingRow = imagesContainer?.querySelector('.scrollable_cards_row[data-animating]');
+    if (animatingRow) {
+        return; // Exit if animation is in progress
+    }
+
+    let existingScrollableRow = imagesContainer?.querySelector('.scrollable_cards_row');
+
+    // If container doesn't exist, create it
+    if (!imagesContainer) {
+        imagesContainer = document.createElement('div');
+        imagesContainer.id = 'scrollable_cards_container_id';
+        imagesContainer.style.opacity = '0';
+        imagesContainer.style.transition = 'opacity 0.3s ease';
+
+        // Add section title for the images
+        const sectionTitle = document.createElement('h2');
+        sectionTitle.className = 'scrollable_section_title';
+        sectionTitle.textContent = data.title;
+        imagesContainer.appendChild(sectionTitle);
+
+        document.getElementById("scrollable_cards_section_id").appendChild(imagesContainer);
+    } else {
+        // Update existing title
+        const sectionTitle = imagesContainer.querySelector('.scrollable_section_title');
+        if (sectionTitle) {
+            sectionTitle.textContent = data.title;
+        }
+    }
+
+    // Create the new scrollable row (initially hidden)
+    const newScrollableRow = document.createElement('div');
+    newScrollableRow.className = 'scrollable_cards_row';
+    newScrollableRow.style.opacity = '0';
+    newScrollableRow.setAttribute('data-animating', 'in');
+
+    // Loop through the images and create cards
+    Object.keys(data).forEach((key) => {
+        if (key.startsWith('image_')) {
+            const [src, text] = data[key];
+
+            const card = document.createElement('div');
+            card.className = 'scrollable_card';
+
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = text;
+            img.addEventListener('click', () => openFullScreenImage(src, text));
+            card.appendChild(img);
+
+            newScrollableRow.appendChild(card);
+        }
+    });
+
+    // If there's an existing row, fade it out first
+    if (existingScrollableRow) {
+        existingScrollableRow.setAttribute('data-animating', 'out');
+        existingScrollableRow.style.transition = 'opacity 0.3s ease';
+        existingScrollableRow.style.opacity = '0';
+
+        // After fade out completes, remove it and add the new one
+        setTimeout(() => {
+            existingScrollableRow.remove();
+            imagesContainer.appendChild(newScrollableRow);
+
+            // Fade in the new content
+            setTimeout(() => {
+                newScrollableRow.style.transition = 'opacity 0.3s ease';
+                newScrollableRow.style.opacity = '1';
+                newScrollableRow.removeAttribute('data-animating');
+            }, 10);
+        }, 200); // Match this with the transition duration
+    } else {
+        // No existing row, just add and fade in the new one
+        imagesContainer.appendChild(newScrollableRow);
+        setTimeout(() => {
+            newScrollableRow.style.transition = 'opacity 0.3s ease';
+            newScrollableRow.style.opacity = '1';
+            imagesContainer.style.opacity = '1';
+            newScrollableRow.removeAttribute('data-animating');
+        }, 10);
+    }
+
+
+
+    // Scroll to the container smoothly
+    imagesContainer.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
     });
 }
+
+
+
+
+
 
 function openFullScreenImage(src, text) {
 
@@ -402,7 +521,7 @@ function openFullScreenImage(src, text) {
 }
 
 // Call the function with the sample data
-createScrollableCardsSection(sectionData);
+createTitleCards(sectionData);
 
 
 

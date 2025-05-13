@@ -59,7 +59,7 @@
 
 :root {
   --bg-color: #F0F4F8;
-  --text-color: #333333;
+  --text-color: black;
 }
 
 body {
@@ -413,31 +413,145 @@ header.hidden {
 
 
 
+
 /* Section Styling */
 #scrollable_cards_section_id {
-  padding: 20px;
+  padding: 1rem;
   position: relative;
-  overflow: hidden;
-  background: linear-gradient(90deg, #ffffff, #0087b047, #ffffff, #0087b047);
-  background-size: 300% 100%;
-  animation: animate-bg 10s linear infinite;
+  background: #c6c6c6;
+  /* Light neutral background */
 }
 
-/* Title Styling with Animated Background */
+/* Title Styling */
 .scrollable_section_title {
   font-size: 2rem;
   font-weight: bold;
-  text-align: right;
-  margin-bottom: 15px;
-  color: #ffffff;
-  z-index: 10;
-  padding: 10px 5px 10px 0;
-  border-top-right-radius: 7px;
-  border-top-left-radius: 7px;
+  margin-bottom: 1.5rem;
+  color: white;
+  padding: 0.5rem 0;
+  border-radius: 5px;
+  padding-right: 10px;
   background: linear-gradient(90deg, #457b9d, #1d3557, #457b9d, #1d3557);
   background-size: 300% 100%;
   animation: animate-bg 10s linear infinite;
 }
+
+/* Cards Container */
+.title_cards_container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Circular Card Styling */
+.title_card {
+  position: relative;
+  width: 12rem;
+  height: 12rem;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: transparent;
+}
+
+/* Animated Border Effect */
+.title_card::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  background: conic-gradient(#0095f1, #002c6b, #0095f1, #002c6b, #0095f1);
+  z-index: -1;
+  animation: borderRotate 4s linear infinite;
+}
+
+.title_card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.title_card:hover::before {
+  animation-play-state: running;
+}
+
+/* Image Styling */
+.title_card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  box-sizing: border-box;
+  z-index: 2;
+  position: relative;
+}
+
+/* Title Styling (replacing the span) */
+.title_card h3 {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 10px 5px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  text-align: center;
+  font-size: 1.2rem;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+  z-index: 3;
+  pointer-events: none;
+  margin: 0;
+}
+
+/* Remove previous title styles */
+.title_card h3::after {
+  display: none;
+}
+
+/* Active State */
+.title_card.active {
+  border: none;
+  /* Remove previous border */
+}
+
+.title_card.active::before {
+  background: conic-gradient(#4CAF50, #8BC34A, #4CAF50, #8BC34A, #4CAF50);
+}
+
+
+
+/* Keep the existing animation */
+@keyframes borderRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.active-indicator {
+  background: #4CAF50;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+
+
+
 
 /* Scrollable Row */
 .scrollable_cards_row {
@@ -448,6 +562,7 @@ header.hidden {
   padding-bottom: 10px;
   scrollbar-width: thin;
   scrollbar-color: rgb(0, 0, 0) #222;
+  transition: opacity 0.3s ease;
 }
 
 /* Custom Scrollbar (Webkit) */
@@ -475,6 +590,7 @@ header.hidden {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: transform 0.3s ease;
 }
 
 .scrollable_card img {
@@ -489,18 +605,18 @@ header.hidden {
   transform: scale(1.05);
 }
 
-.scrollable_cards_container {
+#scrollable_cards_container_id {
   margin-bottom: 4vmax;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
   display: flex;
   flex-direction: column;
+  transition: opacity 0.3s ease;
 }
 
-.scrollable_cards_container+.scrollable_cards_container {
+#scrollable_cards_container_id+#scrollable_cards_container_id {
   margin-top: 30px;
 }
-
 
 
 
@@ -937,7 +1053,7 @@ header.hidden {
 /* Styling the heading */
 .indoforall_insert_comment_form_div h3 {
   font-size: 1.5rem;
-  color: #333;
+  color: black;
   margin-bottom: 15px;
 }
 
@@ -1127,6 +1243,24 @@ footer * {
 
 
 
+
+
+
+  /* Offers Cards */
+  .title_card {
+    width: 25vw;
+    height: 25vw;
+  }
+
+  .title_card h3 {
+    font-size: 2.5vw;
+  }
+
+
+
+
+
+
   /* Offer Cards Section */
   #scrollable_cards_section_id {
     padding: 5px 2px;
@@ -1141,7 +1275,7 @@ footer * {
     width: 40vw;
   }
 
-  .scrollable_cards_container {
+  #scrollable_cards_container {
     margin-bottom: 0.1vmax;
     border-radius: 12px;
     box-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
@@ -1485,6 +1619,24 @@ footer * {
 
 
 
+
+
+
+  /* Offers Cards */
+  .title_card {
+    width: 30vw;
+    height: 30vw;
+  }
+
+  .title_cards_container {
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+  }
+
+  .title_card h3 {
+    font-size: 3.5vw;
+    padding: 5px;
+  }
 
 
 
