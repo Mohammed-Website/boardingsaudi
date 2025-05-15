@@ -359,7 +359,6 @@ function createTitleCards(dataArray) {
 }
 
 // Function to show images for a selected title with fade animations
-// Function to show images for a selected title with animation checks
 function showImagesForTitle(data) {
     let imagesContainer = document.getElementById('scrollable_cards_container_id');
 
@@ -408,6 +407,7 @@ function showImagesForTitle(data) {
             card.className = 'scrollable_card';
 
             const img = document.createElement('img');
+            // Use the full path that matches what was preloaded
             img.src = src;
             img.alt = text;
             img.addEventListener('click', () => openFullScreenImage(src, text));
@@ -445,8 +445,6 @@ function showImagesForTitle(data) {
             newScrollableRow.removeAttribute('data-animating');
         }, 10);
     }
-
-
 
     // Scroll to the container smoothly
     imagesContainer.scrollIntoView({
