@@ -1,12 +1,3 @@
-// Your Supabase credentials
-const supabaseUrl = "https://dkerfetnaquggtlpicul.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrZXJmZXRuYXF1Z2d0bHBpY3VsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY3ODY5MDUsImV4cCI6MjA2MjM2MjkwNX0.GMEkAcx_SWTjV_TdlhQNXzIzh9mDM_L2h8SaLXllQsw"; // use public key
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-
-
-
-
 
 
 
@@ -241,69 +232,68 @@ function scrollToMiddleOfElement(className) {
 
 
 
-// create all offers content functionality
-const sectionData = [
-    {
-        title: 'عروض عيد الفطر',
-        image_1: ['عروض-وقت-الصعود/عيد-الفطر/1.jpg', 'رحلة الشمال التركي - طرابزون | 7 أيام'],
-        image_2: ['عروض-وقت-الصعود/عيد-الفطر/2.jpg', 'رحلة تركيا - طرابزون | 7 أيام'],
-        image_3: ['عروض-وقت-الصعود/عيد-الفطر/3.jpg', 'رحلة روسيا - طرابزون | 7 أيام'],
-        image_4: ['عروض-وقت-الصعود/عيد-الفطر/4.jpg', 'رحلة جوريا - تبليسي | 5 أيام'],
-    },
 
-    {
-        title: 'عروض تايلاند',
-        image_1: ['عروض-وقت-الصعود/تايلاند/1.jpg', 'رحلة جزيرة بوكيت & كوالالمبور | 6 أيام'],
-        image_2: ['عروض-وقت-الصعود/تايلاند/2.jpg', 'رحلة بوكيت & بالي | 6 أيام'],
-        image_3: ['عروض-وقت-الصعود/تايلاند/3.jpg', 'رحلة بانكوك & بوكيت | 9 أيام'],
-    },
 
-    {
-        title: 'عروض تركيا',
-        image_1: ['عروض-وقت-الصعود/تركيا/1.jpg', 'رحلة طرابزون & آيدر | 7 أيام'],
-        image_2: ['عروض-وقت-الصعود/تركيا/2.jpg', 'رحلة تركيا | اسطنبول 6 أيام'],
-    },
 
-    {
-        title: 'عروض روسيا',
-        image_1: ['عروض-وقت-الصعود/روسيا/1.jpg', 'رحلة روسيا | موسكو 6 أيام'],
-        image_2: ['عروض-وقت-الصعود/روسيا/2.jpg', 'رحلة روسيا | موسكو 6 أيام'],
-    },
+// Initialize Bootstrap modal variables (don't initialize yet)
+let imageModal;
+let modalImage;
+let modalImageTitle;
 
-    {
-        title: 'عروض سنغافورة',
-        image_1: ['عروض-وقت-الصعود/سنغافورة/1.jpg', 'رحلة سنغافورة عائلي | 5 أيام'],
-        image_2: ['عروض-وقت-الصعود/سنغافورة/2.jpg', 'رحلة سنغافورة شهر عسل | 5 أيام'],
-        image_3: ['عروض-وقت-الصعود/سنغافورة/3.jpg', 'رحلة سنغافورة عائلي | 5 أيام'],
-    },
 
-    {
-        title: 'عروض فرنسا',
-        image_1: ['عروض-وقت-الصعود/فرنسا/1.jpg', 'رحلة فرنسا إجازة العيد | 6 أيام'],
-    },
 
-    {
-        title: 'عروض موريشيوس',
-        image_1: ['عروض-وقت-الصعود/موريشيوس/1.jpg', 'رحلة موريشيوس | 5 أيام'],
-        image_2: ['عروض-وقت-الصعود/موريشيوس/2.jpg', 'رحلة موريشيوس | 5 أيام'],
-    },
+// Main function to load and display offers
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // Initialize modal elements after DOM is loaded
+        modalImage = document.getElementById('modalImage');
+        modalImageTitle = document.getElementById('modalImageTitle');
+        const modalElement = document.getElementById('imageModal');
+        
+        if (modalElement) {
+            imageModal = new bootstrap.Modal(modalElement);
+        } else {
+            console.error('Modal element not found');
+        }
 
-    {
-        title: 'عروض مصر',
-        image_1: ['عروض-وقت-الصعود/مصر/1.jpg', 'رحلة مصر | القاهرة 5 أيام'],
-    },
+        // Fetch data from Supabase
+        const { data: offers, error } = await supabase
+            .from('travel_offers')
+            .select('*')
+            .order('created_at', { ascending: false });
 
-    {
-        title: 'عروض ماليزيا',
-        image_1: ['عروض-وقت-الصعود/ماليزيا/1.jpg', 'رحلة سيلانجور & لنكاوي & كولالمبور'],
-        image_2: ['عروض-وقت-الصعود/ماليزيا/2.jpg', 'رحلة سيلانجور & لنكاوي & كولالمبور'],
-    },
-];
+        if (error) throw error;
+
+        if (offers.length === 0) {
+            showNoOffersMessage();
+            return;
+        }
+
+        // Transform data to match your expected structure
+        const transformedData = offers.map(offer => {
+            const transformed = { title: offer.title };
+            offer.images.forEach((image, index) => {
+                transformed[`image_${index + 1}`] = image;
+            });
+            return transformed;
+        });
+
+        createTitleCards(transformedData);
+
+        // Activate first card by default
+        if (transformedData.length > 0) {
+            document.querySelector('.title_card').click();
+        }
+    } catch (error) {
+        console.error('Error loading offers:', error);
+        showErrorMessage();
+    }
+});
 
 // Function to create title cards
 function createTitleCards(dataArray) {
     const section = document.getElementById("scrollable_cards_section_id");
-    section.innerHTML = ''; // Clear existing content
+    section.innerHTML = '';
 
     // Add main section title
     const mainTitle = document.createElement('h2');
@@ -322,23 +312,17 @@ function createTitleCards(dataArray) {
         // Create card image (using first image from the set)
         const firstImageKey = Object.keys(data).find(key => key.startsWith('image_'));
         if (firstImageKey) {
-            const [src, text] = data[firstImageKey];
+            const [src, alt] = data[firstImageKey];
             const img = document.createElement('img');
-
-            
-            img.src = `عروض-سياحية/${data.title
-                .replace(/^عروض\s*/g, '')  // Remove "عروض" and any following space
-                .replace(/\s+/g, '-')}.png`;
-
-
-            img.alt = 'رحلات-سياحية';
+            img.src = src;
+            img.alt = alt;
+            img.loading = "lazy"; // Add lazy loading
             titleCard.appendChild(img);
         }
 
-        // Create card title - Remove "عروض" from beginning
+        // Create card title
         const title = document.createElement('h3');
-        const displayTitle = data.title.replace(/^عروض\s*/g, ''); // Remove "عروض" and any following space
-        title.textContent = displayTitle;
+        title.textContent = data.title.replace(/^عروض\s*/g, '');
         titleCard.appendChild(title);
 
         titleCard.addEventListener('click', () => {
@@ -358,26 +342,24 @@ function createTitleCards(dataArray) {
     section.appendChild(titlesContainer);
 }
 
-// Function to show images for a selected title with fade animations
+// Function to show images for a selected title
 function showImagesForTitle(data) {
     let imagesContainer = document.getElementById('scrollable_cards_container_id');
 
-    // Check if there's already a row being animated in or out
+    // Check if animation is in progress
     const animatingRow = imagesContainer?.querySelector('.scrollable_cards_row[data-animating]');
-    if (animatingRow) {
-        return; // Exit if animation is in progress
-    }
+    if (animatingRow) return;
 
     let existingScrollableRow = imagesContainer?.querySelector('.scrollable_cards_row');
 
-    // If container doesn't exist, create it
+    // Create container if it doesn't exist
     if (!imagesContainer) {
         imagesContainer = document.createElement('div');
         imagesContainer.id = 'scrollable_cards_container_id';
         imagesContainer.style.opacity = '0';
         imagesContainer.style.transition = 'opacity 0.3s ease';
 
-        // Add section title for the images
+        // Add section title
         const sectionTitle = document.createElement('h2');
         sectionTitle.className = 'scrollable_section_title';
         sectionTitle.textContent = data.title;
@@ -392,65 +374,101 @@ function showImagesForTitle(data) {
         }
     }
 
-    // Create the new scrollable row (initially hidden)
+    // Create new row (initially hidden)
     const newScrollableRow = document.createElement('div');
     newScrollableRow.className = 'scrollable_cards_row';
     newScrollableRow.style.opacity = '0';
     newScrollableRow.setAttribute('data-animating', 'in');
 
-    // Loop through the images and create cards
+    // Add images to the row
     Object.keys(data).forEach((key) => {
         if (key.startsWith('image_')) {
-            const [src, text] = data[key];
+            const [src, alt] = data[key];
 
             const card = document.createElement('div');
             card.className = 'scrollable_card';
 
             const img = document.createElement('img');
-            // Use the full path that matches what was preloaded
             img.src = src;
-            img.alt = text;
-            img.addEventListener('click', () => openFullScreenImage(src, text));
-            card.appendChild(img);
+            img.alt = alt;
+            img.loading = "lazy";
+            img.addEventListener('click', () => showFullScreenImage(src, alt));
 
+            const caption = document.createElement('p');
+            caption.className = 'mt-2';
+            caption.textContent = alt;
+
+            card.appendChild(img);
+            card.appendChild(caption);
             newScrollableRow.appendChild(card);
         }
     });
 
-    // If there's an existing row, fade it out first
+    // Animation handling
     if (existingScrollableRow) {
         existingScrollableRow.setAttribute('data-animating', 'out');
-        existingScrollableRow.style.transition = 'opacity 0.3s ease';
         existingScrollableRow.style.opacity = '0';
 
-        // After fade out completes, remove it and add the new one
         setTimeout(() => {
             existingScrollableRow.remove();
             imagesContainer.appendChild(newScrollableRow);
 
-            // Fade in the new content
             setTimeout(() => {
-                newScrollableRow.style.transition = 'opacity 0.3s ease';
                 newScrollableRow.style.opacity = '1';
                 newScrollableRow.removeAttribute('data-animating');
             }, 10);
-        }, 200); // Match this with the transition duration
+        }, 200);
     } else {
-        // No existing row, just add and fade in the new one
         imagesContainer.appendChild(newScrollableRow);
         setTimeout(() => {
-            newScrollableRow.style.transition = 'opacity 0.3s ease';
             newScrollableRow.style.opacity = '1';
             imagesContainer.style.opacity = '1';
             newScrollableRow.removeAttribute('data-animating');
         }, 10);
     }
 
-    // Scroll to the container smoothly
-    imagesContainer.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-    });
+    // Smooth scroll to container
+    imagesContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Show image in fullscreen modal
+function showFullScreenImage(src, alt) {
+    if (!modalImage || !modalImageTitle || !imageModal) {
+        console.error('Modal elements not initialized');
+        return;
+    }
+    
+    modalImage.src = src;
+    modalImage.alt = alt;
+    modalImageTitle.textContent = alt;
+    
+    // Check if modal is initialized properly
+    if (imageModal && typeof imageModal.show === 'function') {
+        imageModal.show();
+    } else {
+        console.error('Bootstrap modal not initialized properly');
+        // Fallback - at least show the image
+        window.open(src, '_blank');
+    }
+}
+
+// Error handling functions
+function showNoOffersMessage() {
+    const section = document.getElementById("scrollable_cards_section_id");
+    section.innerHTML = `
+        <div class="alert alert-info text-center">
+            لا توجد عروض متاحة حالياً
+        </div>
+    `;
+}
+
+function showErrorMessage() {
+    const section = document.getElementById("scrollable_cards_section_id");
+    section.innerHTML = `
+        <div class="alert alert-danger text-center">
+            حدث خطأ في تحميل العروض. يرجى المحاولة مرة أخرى لاحقاً
+        </div>
+    `;
 }
 
 
@@ -518,8 +536,6 @@ function openFullScreenImage(src, text) {
     }
 }
 
-// Call the function with the sample data
-createTitleCards(sectionData);
 
 
 
