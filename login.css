@@ -10,10 +10,10 @@
 
 body {
   background: white;
-    display: flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding-top: 1rem;
 }
 
 html {
@@ -33,18 +33,18 @@ html {
   text-align: center;
 }
 
-/* Title styling */
 .section-title {
-  font-size: 1.6rem;
+  font-size: calc(0.7rem + 1vw);
   margin-bottom: 1.5rem;
   color: #222;
 }
 
+
 /* Add offer button */
 .btn.primary {
   display: inline-block;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
+  padding: calc(0.2rem + 0.5vw);
+  font-size: calc(0.7rem + 0.5vw);
   color: #fff;
   background-color: #3b82f6;
   border: none;
@@ -127,6 +127,7 @@ html {
   padding: 20px;
   border-radius: 16px;
   width: 75%;
+  height: fit-content;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
   animation: slideUp 0.3s ease-out;
 }
@@ -209,6 +210,7 @@ label {
   border-radius: 8px;
   border: 1px solid #ccc;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
 }
 
 /* File label button */
@@ -225,6 +227,13 @@ label {
 
 .file-label:hover {
   background-color: #4338ca;
+}
+
+.desc-input {
+  width: 100%;
+  max-width: 400px;
+  font-size: calc(0.5rem + 0.4vw);
+  text-align: center;
 }
 
 /* Remove button with separation */
@@ -245,24 +254,7 @@ label {
   background-color: #f9d6d5;
 }
 
-/* Responsive improvement */
-@media (max-width: 500px) {
-  .image-field {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 
-  .remove-btn {
-    align-self: flex-end;
-    margin-top: 12px;
-  }
-
-  .image-preview {
-    width: 90%;
-    max-width: 100%;
-    height: auto;
-  }
-}
 
 
 
@@ -279,10 +271,9 @@ label {
 
 
 /* Cards Styling */
-/* General Container Styling */
 .offers-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 20px;
   padding: 20px;
   background-color: #f5f7fa;
@@ -291,23 +282,36 @@ label {
 /* Offer Card Styling */
 .offer-card {
   background-color: white;
+  width: 30rem;
+  height: 30rem;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
+}
+
+/* Optional: Add these to control inner elements */
+.card-body {
+  width: 100%;
   height: 100%;
+  overflow: hidden;
+  /* Contain child elements */
+}
+
+.images-preview {
+  width: 100%;
+  height: 20rem;
+  overflow-x: auto;
+  /* Allow horizontal scrolling if needed */
+  white-space: nowrap;
+  /* Keep images in single line */
+  overflow-y: hidden;
 }
 
 .offer-card:hover {
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Card Body Section */
-.card-body {
-  padding: 15px;
-  flex-grow: 1;
 }
 
 .offer-title {
@@ -320,27 +324,19 @@ label {
   border-bottom: 1px solid #e2e8f0;
 }
 
-/* Images Preview Section */
-.images-preview {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 10px;
-  margin-bottom: 15px;
-  min-height: 100px;
-}
 
 .image-thumbnail {
   width: 100%;
-  height: 80px;
+  height: 100%;
   object-fit: cover;
   border-radius: 5px;
   border: 1px solid #e2e8f0;
-  transition: transform 0.2s ease;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .image-thumbnail:hover {
-  transform: scale(1.05);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  opacity: 0.8;
 }
 
 /* Card Actions Section */
@@ -402,21 +398,20 @@ label {
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #e2e8f0;
-  border-top: 4px solid #4299e1;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 15px;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+  margin-bottom: 0;
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
+  to {
     transform: rotate(360deg);
   }
 }
@@ -468,7 +463,7 @@ label {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 10000;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -505,12 +500,50 @@ label {
   transform: scale(1.2);
 }
 
-/* Make thumbnails cursor pointer to indicate they're clickable */
-.image-thumbnail {
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
 
-.image-thumbnail:hover {
-  transform: scale(1.03);
+
+
+
+
+
+
+
+
+
+/* Responsive improvement */
+@media (max-width: 500px) {
+  .container {
+    width: 100%;
+  }
+
+
+
+
+  .modal-content {
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 16px;
+    width: 100%;
+    height: fit-content;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    animation: slideUp 0.3s ease-out;
+  }
+
+
+  .image-field {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .remove-btn {
+    align-self: flex-end;
+    margin-top: 12px;
+  }
+
+  .image-preview {
+    width: 90%;
+    max-width: 70%;
+    min-width: 110px;
+    height: auto;
+  }
 }

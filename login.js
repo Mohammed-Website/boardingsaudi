@@ -71,9 +71,9 @@ function renderOffers(offers) {
     offers.forEach(offer => {
         const offerCard = document.createElement('div');
         offerCard.className = 'offer-card';
-        
+
         // Filter out invalid image URLs
-        const validImages = offer.images.filter(img => 
+        const validImages = offer.images.filter(img =>
             img[0] && (img[0].startsWith('http') || img[0].startsWith('/'))
         );
 
@@ -104,7 +104,7 @@ function renderOffers(offers) {
 
     // Add event listeners to buttons
     document.querySelectorAll('.edit-offer').forEach(btn => {
-        btn.addEventListener('click', () => editOffer(btn.dataset.id));
+        btn.addEventListener('click', (e) => editOffer(btn.dataset.id, e));
     });
 
     document.querySelectorAll('.delete-offer').forEach(btn => {
@@ -112,35 +112,7 @@ function renderOffers(offers) {
     });
 }
 
-// Open fullscreen image with fade animation
-function openFullscreenImage(src) {
-    const img = fullscreenViewer.querySelector('.fullscreen-image');
-    img.src = src;
-    
-    fullscreenViewer.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Prevent scrolling
-}
 
-// Close fullscreen image
-function closeFullscreen() {
-    fullscreenViewer.classList.remove('active');
-    document.body.style.overflow = ''; // Re-enable scrolling
-}
-
-// Close when clicking X or outside image
-fullscreenViewer.addEventListener('click', (e) => {
-    if (e.target.classList.contains('fullscreen-viewer') || 
-        e.target.classList.contains('close-fullscreen')) {
-        closeFullscreen();
-    }
-});
-
-// Close with ESC key
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && fullscreenViewer.classList.contains('active')) {
-        closeFullscreen();
-    }
-});
 
 // Setup event listeners
 function setupEventListeners() {
@@ -174,7 +146,16 @@ function setupEventListeners() {
 }
 
 // Edit existing offer with individual image replacement and removal
-async function editOffer(offerId) {
+async function editOffer(offerId, event) {
+    // Get the clicked button from the event
+    const clickedButton = event.currentTarget;
+
+    // Show spinner on the clicked button
+    clickedButton.disabled = true;
+    clickedButton.innerHTML = '<span class="spinner"></span>';
+
+
+
     const { data, error } = await supabase
         .from('travel_offers')
         .select('*')
@@ -193,16 +174,20 @@ async function editOffer(offerId) {
     document.getElementById('offer-title').value = data.title;
 
     imagesContainer.innerHTML = '';
-    
+
     // Store original images for cleanup
     currentOffer.originalImages = [...data.images];
-    
+
     // Add image fields for each existing image
     data.images.forEach(image => {
         addImageField(image[0], image[1], true); // true = isExistingImage
     });
 
     showModal();
+
+    // Restore button state
+    clickedButton.disabled = false;
+    clickedButton.innerHTML = 'تعديل';
 }
 
 // Modified addImageField function with removal tracking
@@ -221,12 +206,12 @@ function addImageField(url = '', alt = '', isExistingImage = false) {
     const fileLabel = document.createElement('label');
     fileLabel.htmlFor = fileId;
     fileLabel.className = 'file-label';
-    fileLabel.textContent = url ? 'استبدال الصورة' : 'اختر صورة';
+    fileLabel.textContent = isExistingImage ? 'استبدال العرض' : 'تحميل العرض';
 
     const descInput = document.createElement('input');
     descInput.type = 'text';
     descInput.className = 'desc-input';
-    descInput.placeholder = 'وصف الصورة';
+    descInput.placeholder = 'وصف العرض';
     descInput.value = alt;
     descInput.required = true;
 
@@ -234,7 +219,7 @@ function addImageField(url = '', alt = '', isExistingImage = false) {
     removeBtn.type = 'button';
     removeBtn.className = 'remove-btn';
     removeBtn.innerHTML = '×';
-    removeBtn.dataset.imageUrl = url; // Store image URL for removal tracking
+    removeBtn.dataset.imageUrl = url;
 
     const previewContainer = document.createElement('div');
     previewContainer.className = 'preview-container';
@@ -246,7 +231,11 @@ function addImageField(url = '', alt = '', isExistingImage = false) {
         previewImg.className = 'image-preview';
         previewContainer.appendChild(previewImg);
 
-        // Store original URL for potential deletion
+        // Add click handler for fullscreen
+        previewImg.addEventListener('click', () => {
+            openFullscreenImage(url);
+        });
+
         if (isExistingImage) {
             const hiddenInput = document.createElement('input');
             hiddenInput.type = 'hidden';
@@ -266,7 +255,15 @@ function addImageField(url = '', alt = '', isExistingImage = false) {
             previewImg.src = URL.createObjectURL(file);
             previewImg.className = 'image-preview';
             previewContainer.appendChild(previewImg);
-            
+
+            // Add click handler for fullscreen for newly uploaded images
+            previewImg.addEventListener('click', () => {
+                // For newly uploaded files, we'll use the object URL temporarily
+                // Note: This will only work until the page is refreshed
+                // For permanent fullscreen viewing, you'll need to upload first
+                openFullscreenImage(previewImg.src);
+            });
+
             previewImg.onload = function() {
                 URL.revokeObjectURL(this.src);
             };
@@ -279,7 +276,6 @@ function addImageField(url = '', alt = '', isExistingImage = false) {
     div.appendChild(descInput);
     div.appendChild(removeBtn);
 
-    // Track removed images
     removeBtn.addEventListener('click', () => {
         if (url) {
             if (!currentOffer.removedImages) {
@@ -331,7 +327,7 @@ async function saveOffer() {
             if (fileInput.files.length > 0 && descInput.value) {
                 const file = fileInput.files[0];
                 const description = descInput.value;
-                
+
                 const fileExt = file.name.split('.').pop();
                 const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
                 const filePath = `boarding-saudi-travel/${fileName}`;
@@ -374,7 +370,7 @@ async function saveOffer() {
                     .storage
                     .from('offer-images')
                     .remove(filesToDelete);
-                
+
                 if (deleteError) console.error('Error deleting images:', deleteError);
             }
         }
@@ -453,3 +449,58 @@ async function deleteOffer(offerId) {
         alert('حدث خطأ أثناء حذف العرض');
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Open fullscreen image with fade animation
+function openFullscreenImage(src) {
+    const img = fullscreenViewer.querySelector('.fullscreen-image');
+    img.src = src;
+
+    fullscreenViewer.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Prevent scrolling
+}
+
+// Close fullscreen image
+function closeFullscreen() {
+    fullscreenViewer.classList.remove('active');
+    document.body.style.overflow = ''; // Re-enable scrolling
+}
+
+// Close when clicking X or outside image
+fullscreenViewer.addEventListener('click', (e) => {
+    if (e.target.classList.contains('fullscreen-viewer') ||
+        e.target.classList.contains('close-fullscreen')) {
+        closeFullscreen();
+    }
+});
+
+// Close with ESC key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && fullscreenViewer.classList.contains('active')) {
+        closeFullscreen();
+    }
+});
