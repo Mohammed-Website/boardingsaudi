@@ -204,9 +204,9 @@ async function editOffer(offerId, event) {
 function initializeTitleCardHandlers() {
     const titleCardInput = document.getElementById('title-card-image');
     const titleCardLabel = document.querySelector('label[for="title-card-image"]');
-    
+
     // Handle file selection change
-    titleCardInput.addEventListener('change', function(e) {
+    titleCardInput.addEventListener('change', function (e) {
         const file = e.target.files[0];
         const preview = document.getElementById('title-card-preview');
         const removeBtn = document.getElementById('remove-title-card-image');
@@ -215,22 +215,22 @@ function initializeTitleCardHandlers() {
             preview.src = URL.createObjectURL(file);
             preview.style.display = 'block';
             removeBtn.style.display = 'inline-block';
-            
-            preview.onload = function() {
+
+            preview.onload = function () {
                 URL.revokeObjectURL(this.src);
             };
         }
     });
-    
+
     // Prevent default behavior on label click to avoid double file dialog
     if (titleCardLabel) {
-        titleCardLabel.addEventListener('click', function(e) {
+        titleCardLabel.addEventListener('click', function (e) {
             // Prevent the default action
             e.preventDefault();
-            
+
             // Don't handle events that bubbled up from the input itself
             if (e.target === titleCardInput) return;
-            
+
             // Use setTimeout to break the event chain
             setTimeout(() => {
                 titleCardInput.click();
@@ -242,7 +242,7 @@ function initializeTitleCardHandlers() {
 // Call the initialization on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', initializeTitleCardHandlers);
 
-document.getElementById('remove-title-card-image').addEventListener('click', function() {
+document.getElementById('remove-title-card-image').addEventListener('click', function () {
     const preview = document.getElementById('title-card-preview');
     const input = document.getElementById('title-card-image');
     const removeBtn = document.getElementById('remove-title-card-image');
@@ -251,7 +251,7 @@ document.getElementById('remove-title-card-image').addEventListener('click', fun
     preview.style.display = 'none';
     input.value = '';
     removeBtn.style.display = 'none';
-    
+
     // Mark for removal if this was an existing image
     if (currentOffer?.title_card_image) {
         if (!currentOffer.removedTitleCardImage) {
@@ -282,24 +282,22 @@ function addImageField(url = '', alt = '', isExistingImage = false) {
     fileLabel.addEventListener('click', async (e) => {
         // Prevent the default action to avoid double-triggering
         e.preventDefault();
-        
+
         // Don't handle events that bubbled up from the input itself
         if (e.target === fileInput) return;
-        
+
         if (isExistingImage && url) {
             // Show confirmation dialog
-            if (confirm('هل أنت متأكد من استبدال هذه الصورة؟')) {
-                // Get the file input
-                const fileInput = e.target.closest('.image-field').querySelector('input[type="file"]');
-                
-                // Clear the input to allow selecting the same file again
-                fileInput.value = '';
-                
-                // Use setTimeout to break the event chain
-                setTimeout(() => {
-                    fileInput.click();
-                }, 0);
-            }
+            // Get the file input
+            const fileInput = e.target.closest('.image-field').querySelector('input[type="file"]');
+
+            // Clear the input to allow selecting the same file again
+            fileInput.value = '';
+
+            // Use setTimeout to break the event chain
+            setTimeout(() => {
+                fileInput.click();
+            }, 0);
         } else {
             // Use setTimeout to break the event chain
             setTimeout(() => {
@@ -394,13 +392,16 @@ function addImageField(url = '', alt = '', isExistingImage = false) {
     div.appendChild(removeBtn);
 
     removeBtn.addEventListener('click', () => {
-        if (url) {
-            if (!currentOffer.removedImages) {
-                currentOffer.removedImages = [];
+        if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
+
+            if (url) {
+                if (!currentOffer.removedImages) {
+                    currentOffer.removedImages = [];
+                }
+                currentOffer.removedImages.push(url);
             }
-            currentOffer.removedImages.push(url);
+            div.remove();
         }
-        div.remove();
     });
 
     imagesContainer.appendChild(div);
@@ -475,7 +476,7 @@ async function saveOffer() {
         let titleCardImageUrl = currentOffer?.title_card_image || null;
         const titleCardPreview = document.getElementById('title-card-preview');
         const titleCardFileInput = document.getElementById('title-card-image');
-        
+
         // Check if we have a preview image (either existing or newly selected)
         if (titleCardPreview?.src && !titleCardPreview.src.includes('placeholder')) {
             // If it's a new image (blob URL), upload it
@@ -549,7 +550,7 @@ async function saveOffer() {
 
         // 2. Process content images
         console.log('Starting image processing...');
-        
+
         // Get the current images from the database
         const currentImages = currentOffer?.sup_images_array || [];
         console.log('Database images array:', {
@@ -564,7 +565,7 @@ async function saveOffer() {
                 alt: img.alt,
                 description: img.closest('.image-field')?.querySelector('input[type="text"]')?.value || ''
             }));
-            
+
         console.log('Visible images in form:', {
             count: visibleImages.length,
             images: visibleImages.map(img => ({
@@ -613,7 +614,7 @@ async function saveOffer() {
                 // Case 1: Existing image that was replaced
                 if (isExisting && fileInput.files.length > 0) {
                     console.log('Replacing image:', originalUrl);
-                    
+
                     const file = fileInput.files[0];
                     const fileExt = file.name.split('.').pop();
                     const fileName = originalUrl.split('/').pop(); // Keep same filename
@@ -650,7 +651,7 @@ async function saveOffer() {
 
                     // Track this replacement
                     replacedImages.set(originalUrl, publicUrl);
-                    
+
                     // Find and update the image in finalImages
                     const existingImage = existingImagesMap.get(originalUrl);
                     if (existingImage !== undefined) {
@@ -674,7 +675,7 @@ async function saveOffer() {
                 // Case 3: New image
                 else if (!isExisting && fileInput.files.length > 0) {
                     console.log('Adding new image');
-                    
+
                     const file = fileInput.files[0];
                     const fileExt = file.name.split('.').pop();
                     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
@@ -706,21 +707,21 @@ async function saveOffer() {
 
         // 3. Process and upload all images
         const sup_images_array = [];
-        
+
         // Process each visible image in the form
         for (const field of document.querySelectorAll('.image-field')) {
             const img = field.querySelector('img');
             const descInput = field.querySelector('input[type="text"]');
             const fileInput = field.querySelector('input[type="file"]');
-            
+
             // Skip if no image or image was removed
             if (!img || !img.src || field.querySelector('.remove-btn')?.style.display === 'none') {
                 continue;
             }
-            
+
             const description = descInput?.value || '';
             const isBlobUrl = img.src.startsWith('blob:');
-            
+
             // For existing images (not blob URLs)
             if (!isBlobUrl) {
                 const imageUrl = img.dataset.originalSrc || img.src;
@@ -729,7 +730,7 @@ async function saveOffer() {
                 }
                 continue;
             }
-            
+
             // For new images (blob URLs), we need to upload them
             if (fileInput?.files.length > 0) {
                 try {
@@ -737,7 +738,7 @@ async function saveOffer() {
                     const fileExt = file.name.split('.').pop();
                     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
                     const filePath = `boarding-saudi-travel/${fileName}`;
-                    
+
                     // Upload the file to Supabase storage
                     const { error: uploadError } = await supabase
                         .storage
@@ -747,18 +748,18 @@ async function saveOffer() {
                             upsert: false,
                             contentType: file.type
                         });
-                    
+
                     if (uploadError) throw uploadError;
-                    
+
                     // Get the public URL
                     const { data: { publicUrl } } = supabase
                         .storage
                         .from('offer-images')
                         .getPublicUrl(filePath);
-                    
+
                     console.log('Uploaded new image:', publicUrl);
                     sup_images_array.push([publicUrl, description]);
-                    
+
                 } catch (error) {
                     console.error('Error uploading image:', error);
                     alert(`حدث خطأ في رفع الصورة: ${error.message}`);
@@ -766,7 +767,7 @@ async function saveOffer() {
                 }
             }
         }
-        
+
         console.log('New sup_images_array to save:', {
             count: sup_images_array.length,
             images: sup_images_array.map(img => ({
@@ -807,7 +808,7 @@ async function saveOffer() {
         let finalTitleCardImage = null;
         const titleCardInput = document.getElementById('title-card-image');
         const titleCardPreviewElement = document.getElementById('title-card-preview');
-        
+
         // Check if there's a new title card image to upload
         if (titleCardInput?.files.length > 0) {
             try {
@@ -825,7 +826,7 @@ async function saveOffer() {
                         upsert: false,
                         contentType: file.type
                     });
-                
+
                 if (uploadError) throw uploadError;
 
                 // Get public URL
@@ -833,33 +834,33 @@ async function saveOffer() {
                     .storage
                     .from('offer-images')
                     .getPublicUrl(filePath);
-                
+
                 // If there was a previous title card image, mark it for deletion
                 if (currentOffer?.title_card_image) {
                     removedImageUrls.add(currentOffer.title_card_image);
                 }
-                
+
                 finalTitleCardImage = publicUrl;
                 console.log('Uploaded new title card image:', publicUrl);
-                
+
             } catch (error) {
                 console.error('Error uploading title card image:', error);
                 throw new Error('حدث خطأ في رفع صورة العنوان');
             }
-        } 
+        }
         // If no new image but there's an existing one, keep it
-        else if (titleCardPreviewElement?.src && 
-                !titleCardPreviewElement.src.includes('placeholder') && 
-                !titleCardPreviewElement.src.startsWith('blob:')) {
+        else if (titleCardPreviewElement?.src &&
+            !titleCardPreviewElement.src.includes('placeholder') &&
+            !titleCardPreviewElement.src.startsWith('blob:')) {
             finalTitleCardImage = titleCardPreviewElement.src;
-        } 
+        }
         // If the title card was removed
         else if (titleCardPreviewElement?.src.includes('placeholder') && currentOffer?.title_card_image) {
             // The existing title card image will be in removedImageUrls and will be deleted
             removedImageUrls.add(currentOffer.title_card_image);
             finalTitleCardImage = null;
         }
-        
+
         // 6. Prepare offer data
         const offerData = {
             title,
@@ -867,7 +868,7 @@ async function saveOffer() {
             title_card_image: finalTitleCardImage,
             updated_at: new Date().toISOString()
         };
-        
+
         console.log('Saving offer with data:', {
             title,
             images_count: sup_images_array.length,
@@ -1035,12 +1036,12 @@ async function cleanupUnusedImages() {
             .select('title_card_image, sup_images_array');
 
         if (offersError) throw offersError;
-        
+
         console.log('Total offers found:', offers.length);
 
         // 2. Create a Set of all used image paths (just the filenames)
         const usedImagePaths = new Set();
-        
+
         // Function to extract just the filename from URL or path
         const extractFilename = (path) => {
             if (!path) return null;
@@ -1060,13 +1061,13 @@ async function cleanupUnusedImages() {
                 return null;
             }
         };
-        
+
         console.log('Processing database entries for used images...');
-        
+
         // Track all used images
         offers.forEach((offer, index) => {
             console.log(`\nProcessing offer ${index + 1}:`);
-            
+
             // Process title card image
             if (offer.title_card_image) {
                 const filename = extractFilename(offer.title_card_image);
@@ -1075,20 +1076,20 @@ async function cleanupUnusedImages() {
                     usedImagePaths.add(filename);
                 }
             }
-            
+
             // Process images array
             if (offer.sup_images_array?.length > 0) {
                 console.log(`  Found ${offer.sup_images_array.length} images in sup_images_array`);
-                
+
                 // Handle both array of arrays and array of objects format
                 offer.sup_images_array.forEach((item, i) => {
                     try {
                         let imageUrl;
-                        
+
                         // Check if it's an array [url, ...] format
                         if (Array.isArray(item) && item.length > 0) {
                             imageUrl = item[0]; // First element is the URL
-                        } 
+                        }
                         // Check if it's an object with url property
                         else if (item && typeof item === 'object' && item.url) {
                             imageUrl = item.url;
@@ -1097,7 +1098,7 @@ async function cleanupUnusedImages() {
                         else if (typeof item === 'string') {
                             imageUrl = item;
                         }
-                        
+
                         if (imageUrl) {
                             const filename = extractFilename(imageUrl);
                             if (filename) {
@@ -1111,7 +1112,7 @@ async function cleanupUnusedImages() {
                 });
             }
         });
-        
+
         console.log('\nTotal unique images found in database:', usedImagePaths.size);
         console.log('Used image filenames:', Array.from(usedImagePaths));
 
@@ -1120,16 +1121,16 @@ async function cleanupUnusedImages() {
         // 3. List all files in the storage bucket
         const bucketName = 'offer-images';
         const folderName = 'boarding-saudi-travel';
-        
+
         console.log(`\n=== Starting cleanup process ===`);
         console.log(`Bucket: ${bucketName}`);
         console.log(`Folder: ${folderName}`);
-        
+
         // Recursive function to list all files in a folder and its subfolders
         const listAllFiles = async (folder = '') => {
             const allFiles = [];
             console.log(`Listing files in: ${folder || 'root'}`);
-            
+
             try {
                 const { data: files, error } = await supabase
                     .storage
@@ -1143,7 +1144,7 @@ async function cleanupUnusedImages() {
 
                 for (const file of files) {
                     const fullPath = folder ? `${folder}/${file.name}` : file.name;
-                    
+
                     if (file.metadata) {
                         // It's a file
                         allFiles.push({
@@ -1163,10 +1164,10 @@ async function cleanupUnusedImages() {
                 console.error(`Error processing folder ${folder}:`, error);
                 throw error;
             }
-            
+
             return allFiles;
         };
-        
+
         // Get all files
         const files = await listAllFiles(folderName);
         console.log(`\nFound ${files.length} total files in storage`);
@@ -1178,11 +1179,11 @@ async function cleanupUnusedImages() {
 
         console.log('\n=== Processing files ===');
         console.log(`Found ${usedImagePaths.size} unique used images in database`);
-        
+
         for (const file of files) {
             const filename = file.name;
             const isUsed = usedImagePaths.has(filename);
-            
+
             const fileInfo = {
                 path: file.fullPath,
                 filename: filename,
@@ -1190,7 +1191,7 @@ async function cleanupUnusedImages() {
                 type: file.metadata?.mimetype,
                 isUsed: isUsed
             };
-            
+
             if (!isUsed) {
                 console.log(`\n[DELETE] ${file.fullPath}`);
                 try {
@@ -1198,7 +1199,7 @@ async function cleanupUnusedImages() {
                         .storage
                         .from(bucketName)
                         .remove([file.fullPath]);
-                    
+
                     if (deleteError) {
                         console.error(`  Error deleting:`, deleteError);
                         errors.push({ file: file.fullPath, error: deleteError });
@@ -1229,14 +1230,14 @@ async function cleanupUnusedImages() {
             errorDetails: errors,
             usedImagePaths: Array.from(usedImagePaths) // For debugging
         };
-        
+
         console.log('\n=== Cleanup Summary ===');
         console.log(`Total files processed: ${result.totalFiles}`);
         console.log(`Used images found: ${result.usedImages}`);
         console.log(`Files kept: ${result.keptFiles}`);
         console.log(`Files deleted: ${result.deletedFiles}`);
         console.log(`Errors: ${result.errors}`);
-        
+
         return result;
 
     } catch (error) {

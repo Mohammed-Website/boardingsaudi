@@ -1,4 +1,4 @@
-/* General Reset */
+/* Mobile-First Base Styles (applies to all screens) */
 * {
   font-family: 'Cairo', sans-serif;
   padding: 0;
@@ -10,48 +10,45 @@
 
 body {
   background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 1rem;
+  padding: 0.5rem;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-
-
-
 /* Centered container */
 .container {
-  width: 95%;
+  width: 100%;
+  max-width: 1200px;
   background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
   text-align: center;
+  margin: 0 auto;
 }
 
 .section-title {
-  font-size: calc(0.7rem + 1vw);
-  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
   color: #222;
 }
-
 
 /* Add offer button */
 .btn.primary {
   display: inline-block;
-  padding: calc(0.2rem + 0.5vw);
-  font-size: calc(0.7rem + 0.5vw);
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
   color: #fff;
   background-color: #3b82f6;
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 280px;
 }
 
 .btn.primary:hover {
@@ -60,31 +57,23 @@ html {
 
 /* Offers container */
 #offers-container {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 1rem;
-  justify-content: center;
+  width: 20%;
 }
-
-
-
-
-
-
-
-
 
 /* BUTTONS - FLAT & RESPONSIVE */
 .btn {
-  padding: 14px 18px;
+  padding: 0.8rem 1rem;
   border: none;
-  border-radius: 10px;
-  font-size: 16px;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   width: 100%;
   max-width: 280px;
-  margin: 10px auto;
+  margin: 0.5rem auto;
   display: block;
   transition: background-color 0.2s ease-in-out;
 }
@@ -123,12 +112,13 @@ html {
 
 .modal-content {
   background-color: white;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 16px;
-  width: 75%;
+  margin: 1rem auto;
+  padding: 1rem;
+  border-radius: 0.8rem;
+  width: 95%;
+  max-width: 500px;
   height: fit-content;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0.3rem 0.6rem rgba(0, 0, 0, 0.08);
   animation: slideUp 0.3s ease-out;
 }
 
@@ -136,17 +126,17 @@ html {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
 }
 
 .modal-header h2 {
-  font-size: 18px;
+  font-size: 1.1rem;
   font-weight: 600;
   margin: 0;
 }
 
 .close-btn {
-  font-size: 24px;
+  font-size: 1.5rem;
   background: transparent;
   border: none;
   color: #999;
@@ -160,21 +150,21 @@ html {
 
 /* FORM */
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
 }
 
 label {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 0.5rem;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 0.9rem;
 }
 
 .form-control {
   width: 100%;
-  padding: 14px;
-  font-size: 15px;
-  border-radius: 10px;
+  padding: 0.8rem;
+  font-size: 0.9rem;
+  border-radius: 0.5rem;
   border: 1px solid #ccc;
   transition: border 0.2s ease;
 }
@@ -187,40 +177,40 @@ label {
 #images-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 16px;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .image-field {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1rem;
   background-color: #f1f3f7;
-  padding: 16px;
-  border-radius: 12px;
+  padding: 1rem;
+  border-radius: 0.6rem;
   border: 1px solid #e0e0e0;
   flex-wrap: wrap;
 }
 
 .image-preview {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 0.4rem;
   border: 1px solid #ccc;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.05);
   cursor: pointer;
 }
 
 /* File label button */
 .file-label {
-  padding: 10px 18px;
+  padding: 0.6rem 1rem;
   background-color: #4f46e5;
   color: white;
-  border-radius: 10px;
+  border-radius: 0.5rem;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.9rem;
   font-weight: 500;
   transition: background-color 0.2s ease;
 }
@@ -232,7 +222,7 @@ label {
 .desc-input {
   width: 100%;
   max-width: 400px;
-  font-size: calc(0.5rem + 0.4vw);
+  font-size: 0.9rem;
   text-align: center;
 }
 
@@ -242,10 +232,10 @@ label {
   background-color: #fcebea;
   color: #e3342f;
   border: none;
-  font-size: 16px;
+  font-size: 0.9rem;
   font-weight: bold;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.4rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -254,82 +244,62 @@ label {
   background-color: #f9d6d5;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Cards Styling */
 .offers-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 20px;
-  padding: 20px;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding: 1rem;
   background-color: #f5f7fa;
 }
 
 /* Offer Card Styling */
 .offer-card {
   background-color: white;
-  width: 30rem;
-  height: 30rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: auto;
+  min-height: 300px;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.2rem 0.3rem rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
 }
 
-/* Optional: Add these to control inner elements */
 .card-body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  /* Contain child elements */
 }
 
 .images-preview {
   width: 100%;
-  height: 20rem;
+  height: 12rem;
   overflow-x: auto;
-  /* Allow horizontal scrolling if needed */
   white-space: nowrap;
-  /* Keep images in single line */
   overflow-y: hidden;
 }
 
 .offer-card:hover {
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.1);
 }
 
 .offer-title {
-  margin: 0 0 15px 0;
+  margin: 0 0 0.8rem 0;
   color: #2d3748;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
   text-align: right;
-  padding-bottom: 10px;
+  padding-bottom: 0.5rem;
   border-bottom: 1px solid #e2e8f0;
 }
-
 
 .image-thumbnail {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 5px;
+  border-radius: 0.3rem;
   border: 1px solid #e2e8f0;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -343,20 +313,20 @@ label {
 .card-actions {
   display: flex;
   justify-content: space-between;
-  padding: 15px;
+  padding: 0.8rem;
   background-color: #f8fafc;
   border-top: 1px solid #e2e8f0;
 }
 
 .card-actions .btn {
-  margin: 0 0.5rem;
-  padding: 8px 15px;
+  margin: 0 0.3rem;
+  padding: 0.5rem 0.8rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 0.3rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .edit-btn {
@@ -380,12 +350,12 @@ label {
 /* No Offers Message */
 .no-offers {
   text-align: center;
-  padding: 30px;
+  padding: 1.5rem;
   color: #718096;
-  font-size: 1.1rem;
+  font-size: 1rem;
   background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.05);
 }
 
 /* Loading State */
@@ -394,19 +364,19 @@ label {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 30px;
+  padding: 1.5rem;
 }
 
 .spinner {
   display: inline-block;
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   border-top-color: white;
   animation: spin 1s ease-in-out infinite;
   vertical-align: middle;
-  margin-right: 8px;
+  margin-right: 0.5rem;
   margin-bottom: 0;
 }
 
@@ -419,38 +389,12 @@ label {
 /* Error Message */
 .error-message {
   text-align: center;
-  padding: 20px;
+  padding: 1rem;
   color: #e53e3e;
   background-color: #fff5f5;
-  border-radius: 5px;
+  border-radius: 0.3rem;
   border: 1px solid #fed7d7;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Fullscreen viewer styles */
 .fullscreen-viewer {
@@ -475,8 +419,8 @@ label {
 }
 
 .fullscreen-image {
-  max-width: 90%;
-  max-height: 90%;
+  max-width: 95%;
+  max-height: 95%;
   object-fit: contain;
   transform: scale(0.95);
   transition: transform 0.3s ease;
@@ -488,10 +432,10 @@ label {
 
 .close-fullscreen {
   position: absolute;
-  top: 30px;
-  right: 30px;
+  top: 1rem;
+  right: 1rem;
   color: white;
-  font-size: 40px;
+  font-size: 2rem;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
@@ -501,49 +445,100 @@ label {
 }
 
 
-
-
-
-
-
-
-
-
-
-/* Responsive improvement */
-@media (max-width: 500px) {
+/* ========== MEDIA QUERIES WITH MAX-WIDTH ========== */
+@media (max-width: 767px) {
   .container {
-    width: 100%;
+    padding: 0.8rem;
   }
 
+  #offers-container {
+    width: 50%;
+  }
 
+  .section-title {
+    font-size: 1.2rem;
+  }
 
+  .images-preview {
+    height: 10rem;
+  }
 
   .modal-content {
-    margin: 20px auto;
-    padding: 20px;
-    border-radius: 16px;
-    width: 100%;
-    height: fit-content;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-    animation: slideUp 0.3s ease-out;
+    padding: 0.8rem;
+    width: 98%;
   }
 
-
-  .image-field {
-    flex-direction: column;
-    align-items: flex-start;
+  .offer-card {
+    min-height: 280px;
   }
 
-  .remove-btn {
-    align-self: flex-end;
-    margin-top: 12px;
+  .card-actions .btn {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.7rem;
+  }
+}
+
+
+
+
+
+
+
+
+
+@media (max-width: 479px) {
+  body {
+    padding: 0.3rem;
+  }
+
+  .container {
+    padding: 0.6rem;
+    border-radius: 0.3rem;
+  }
+
+  #offers-container {
+    width: 60%;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .btn {
+    padding: 0.7rem;
+    font-size: 0.8rem;
+  }
+
+  .images-preview {
+    height: 8rem;
   }
 
   .image-preview {
-    width: 90%;
-    max-width: 70%;
-    min-width: 110px;
-    height: auto;
+    width: 60px;
+    height: 60px;
+  }
+
+  .image-field {
+    padding: 0.8rem;
+    gap: 0.8rem;
+  }
+
+  .file-label {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  .remove-btn {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .offer-title {
+    font-size: 0.9rem;
+  }
+
+  .card-actions {
+    padding: 0.6rem;
   }
 }
