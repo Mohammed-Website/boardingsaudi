@@ -92,13 +92,18 @@ html {
   left: 0.3vmax;
   font-size: 1.5rem;
   display: flex;
+  flex-direction: row;
+  /* Explicitly set to row (default) */
+  justify-content: center;
   align-items: center;
+  /* This should center them vertically */
   gap: 3px;
   background: rgb(225, 227, 226);
   color: black;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   border-radius: 30px;
-  padding: 3px 5px;
+  padding: 3px 10px;
+  /* Increased horizontal padding */
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -109,6 +114,18 @@ html {
 
 .whatsapp_icon_div ion-icon {
   font-size: 2.5rem;
+  display: flex;
+  /* Ensures proper alignment */
+  align-items: center;
+}
+
+.whatsapp_icon_div p {
+  margin: 0;
+  /* Remove default paragraph margins */
+  padding: 0;
+  /* Remove default paragraph padding */
+  white-space: nowrap;
+  /* Prevent text from wrapping */
 }
 
 
@@ -310,7 +327,6 @@ header.hidden {
 
 /* Section Styling */
 .neon_section {
-  width: 100vw;
   background: var(--bg-color);
   overflow: hidden;
   display: flex;
@@ -445,40 +461,53 @@ header.hidden {
   padding: 1rem;
 }
 
-/* Circular Card Styling */
-.title_card {
+
+
+
+
+
+/* Wrapper with Rotating Border */
+.title_card_wrapper {
   position: relative;
   width: 12rem;
   height: 12rem;
   border-radius: 50%;
-  overflow: hidden;
-  cursor: pointer;
-  z-index: 1;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Animated Border Effect */
-.title_card::before {
+.title_card_wrapper::before {
   content: "";
   position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
+  top: -6px;
+  left: -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 12px);
   border-radius: 50%;
   background: conic-gradient(#0095f1, #002c6b, #0095f1, #002c6b, #0095f1);
-  z-index: -1;
   animation: borderRotate 4s linear infinite;
+  z-index: 0;
+}
+
+/* Main Card Styling */
+.title_card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: transparent;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .title_card:hover {
-  transform: scale(1.05);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.title_card:hover::before {
-  animation-play-state: running;
 }
 
 /* Image Styling */
@@ -486,15 +515,18 @@ header.hidden {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
   border-radius: 50%;
-  border: 4px solid transparent;
-  box-sizing: border-box;
+  display: block;
   z-index: 2;
   position: relative;
+  transition: transform 0.3s ease;
 }
 
-/* Title Styling (replacing the span) */
+.title_card img:hover {
+  transform: scale(1.05);
+}
+
+/* Title Text */
 .title_card h3 {
   position: absolute;
   bottom: 0;
@@ -506,29 +538,12 @@ header.hidden {
   font-size: 1.2rem;
   border-bottom-left-radius: 50%;
   border-bottom-right-radius: 50%;
+  margin: 0;
   z-index: 3;
   pointer-events: none;
-  margin: 0;
 }
 
-/* Remove previous title styles */
-.title_card h3::after {
-  display: none;
-}
-
-/* Active State */
-.title_card.active {
-  border: none;
-  /* Remove previous border */
-}
-
-.title_card.active::before {
-  background: conic-gradient(#4CAF50, #8BC34A, #4CAF50, #8BC34A, #4CAF50);
-}
-
-
-
-/* Keep the existing animation */
+/* Border Animation */
 @keyframes borderRotate {
   0% {
     transform: rotate(0deg);
@@ -539,15 +554,16 @@ header.hidden {
   }
 }
 
-.active-indicator {
-  background: #4CAF50;
-  color: white;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  display: inline-block;
-  margin-top: 0.5rem;
+
+
+
+
+
+.title_card.active::before {
+  background: conic-gradient(#4CAF50, #8BC34A, #4CAF50, #8BC34A, #4CAF50);
 }
+
+
 
 
 
@@ -579,10 +595,19 @@ header.hidden {
   background-color: #e0e0e0;
 }
 
+/* Only apply fade-in effect to images inside scrollable_cards_row */
+.scrollable_cards_row img.fade-in {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.scrollable_cards_row img.fade-in.visible {
+  opacity: 1;
+}
+
 /* Individual Card Styling */
 .scrollable_card {
   width: 20rem;
-  background: #fff;
   border-radius: 7px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -611,6 +636,7 @@ header.hidden {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
   display: flex;
   flex-direction: column;
+  opacity: 0;
   transition: opacity 0.3s ease;
 }
 
@@ -1150,7 +1176,6 @@ header.hidden {
 
 /* Footer Style */
 footer {
-  width: 100vw;
   padding: 100px 0;
   direction: ltr;
   background: rgb(225, 227, 226);
