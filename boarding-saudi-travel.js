@@ -257,38 +257,35 @@ function createTitleCards(dataArray) {
     document.body.appendChild(preloadContainer);
 
     dataArray.forEach((data, index) => {
-        // Create card wrapper
-        const titleCardWrapper = document.createElement('div');
-        titleCardWrapper.className = 'title_card_wrapper';
-
         // Create card
         const titleCard = document.createElement('div');
         titleCard.className = 'title_card';
         titleCard.dataset.index = index;
+
+        // Create inner wrapper
+        const innerWrapper = document.createElement('div');
+        innerWrapper.className = 'title_card_inner_wrapper';
 
         // Add title card image if available
         if (data.title_card_image) {
             const img = document.createElement('img');
             img.src = data.title_card_image;
             img.alt = data.title || `Title Card ${index}`;
-            titleCard.appendChild(img);
+            innerWrapper.appendChild(img);
         }
 
-
-
-        // Remove "عروض" at the beginning and all "عرض" anywhere else
+        // Clean and add title
         const cleanedTitle = data.title
-            .replace(/^عروض\s*/g, '')   // remove "عروض" at the start
-            .replace(/عرض/g, '');       // remove all "عرض" in the rest of the string
-
-        // Add title
+            .replace(/^عروض\s*/g, '') // remove "عروض" at the start
+            .replace(/عرض/g, '');    // remove all "عرض"
         const title = document.createElement('h3');
-        title.textContent = cleanedTitle.trim(); // Trim any leftover whitespace
-        titleCard.appendChild(title);
+        title.textContent = cleanedTitle.trim();
+        innerWrapper.appendChild(title);
 
+        // Append innerWrapper to card
+        titleCard.appendChild(innerWrapper);
 
-
-        // Store pre-loaded images for this card
+        // Store pre-loaded images
         preloadedImages[index] = [];
         Object.keys(data).forEach(key => {
             if (key.startsWith('image_')) {
@@ -303,8 +300,7 @@ function createTitleCards(dataArray) {
 
         // Click handler
         titleCard.addEventListener('click', () => {
-            if (currentActiveIndex === index) return; // Skip if same card clicked
-
+            if (currentActiveIndex === index) return;
             document.querySelectorAll('.title_card').forEach(card => {
                 card.classList.remove('active');
             });
@@ -312,12 +308,12 @@ function createTitleCards(dataArray) {
             showImagesForTitle(index, data);
         });
 
-        titleCardWrapper.appendChild(titleCard);
-        titlesContainer.appendChild(titleCardWrapper);
+        titlesContainer.appendChild(titleCard);
     });
 
     section.appendChild(titlesContainer);
 }
+
 
 // Enhanced showImagesForTitle with smooth transitions
 function showImagesForTitle(index, data) {

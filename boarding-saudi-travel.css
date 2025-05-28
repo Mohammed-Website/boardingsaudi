@@ -465,53 +465,76 @@ header.hidden {
 
 
 
-/* Wrapper with Rotating Border */
-.title_card_wrapper {
-  position: relative;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 /* Main Card Styling */
 .title_card {
   position: relative;
+  width: 15rem;
+  height: 15rem;
+  margin: 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Inner wrapper clips content */
+.title_card_inner_wrapper {
   width: 100%;
   height: 100%;
   border-radius: 50%;
   overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  background: transparent;
+  position: relative;
   z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+}
+
+/* Animated Border */
+.title_card::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px; 
+  border-radius: 50%;
+  background: conic-gradient(#457b9d, #1d3557, #457b9d, #1d3557);
+  z-index: 0;
+  animation: borderRotate 4s linear infinite;
+}
+
+.title_card:hover::before {
+  animation-play-state: running;
 }
 
 .title_card:hover {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
+@keyframes borderRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 /* Image Styling */
-.title_card img {
+.title_card_inner_wrapper img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
   display: block;
-  z-index: 2;
-  position: relative;
   transition: transform 0.3s ease;
 }
 
-.title_card img:hover {
+.title_card_inner_wrapper img:hover {
   transform: scale(1.05);
 }
 
 /* Title Text */
-.title_card h3 {
+.title_card_inner_wrapper h3 {
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -527,16 +550,6 @@ header.hidden {
   pointer-events: none;
 }
 
-/* Border Animation */
-@keyframes borderRotate {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
 /* Navigation Arrows */
 .nav-arrow {
@@ -1313,6 +1326,7 @@ footer * {
     width: 25vw;
     height: 25vw;
   }
+  
 
   .title_card h3 {
     font-size: 2.5vw;
@@ -1686,8 +1700,9 @@ footer * {
 
   /* Offers Cards */
   .title_card {
-    width: 30vw;
-    height: 30vw;
+    width: 35vw;
+    height: 35vw;
+    margin: 0.2rem;
   }
 
   .title_cards_container {
