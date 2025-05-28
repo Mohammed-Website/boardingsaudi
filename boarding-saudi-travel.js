@@ -368,8 +368,6 @@ function updateContent(container, index, data) {
     }
 
     container.appendChild(row);
-    console.log('row', row);
-    console.log('container', container);
 
     // Fade in
     setTimeout(() => {
@@ -419,7 +417,6 @@ async function getAndTransformSupabaseData() {
 
 // Main function to load data and create title cards
 async function loadDataAndCreateCards() {
-    console.log('Starting loadDataAndCreateCards...');
 
     // 1. Get data from Supabase
     const sectionData = await getAndTransformSupabaseData();
@@ -429,19 +426,16 @@ async function loadDataAndCreateCards() {
         return;
     }
 
-    console.log('Successfully transformed data, now creating cards...');
-
     // 2. Create title cards with the data
     createTitleCards(sectionData);
-
-    console.log('Cards creation process completed');
 }
 
-// Call this when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded, starting initialization...');
-    loadDataAndCreateCards();
-});
+
+
+// Call function to fetch the data from the Supabase database
+loadDataAndCreateCards();
+
+
 
 // Global variables to track current image and all images in the gallery
 let currentFullscreenIndex = 0;
@@ -452,7 +446,7 @@ function openFullScreenImage(src, text, index = 0) {
     // Get all scrollable cards in the current row
     const currentRow = document.querySelector('.scrollable_cards_row:not([style*="display: none"])');
     if (!currentRow) return;
-    
+
     // Get all images in the current row
     const cards = Array.from(currentRow.querySelectorAll('.scrollable_card'));
     fullscreenImages = cards.map(card => ({
@@ -515,13 +509,13 @@ function openFullScreenImage(src, text, index = 0) {
     // Create image container
     const imageContainer = document.createElement('div');
     imageContainer.className = 'image-container';
-    
+
     // Create full-screen image
     const fullScreenImage = document.createElement('img');
     fullScreenImage.src = fullscreenImages[currentFullscreenIndex]?.src || src;
     fullScreenImage.alt = fullscreenImages[currentFullscreenIndex]?.alt || text;
     fullScreenImage.className = 'full_screen_image fade-in';
-    
+
     // Add image to container
     imageContainer.appendChild(fullScreenImage);
 
@@ -559,10 +553,10 @@ function openFullScreenImage(src, text, index = 0) {
             navigateImages(1);
         }
     };
-    
+
     // Add event listener for keyboard navigation
     document.addEventListener('keydown', handleKeyDown);
-    
+
     // Initial arrow visibility
     updateArrowVisibility();
 
@@ -571,62 +565,62 @@ function openFullScreenImage(src, text, index = 0) {
         document.removeEventListener('keydown', handleKeyDown);
         document.body.style.overflow = '';
     };
-    
+
     // Navigation function
     function navigateImages(direction) {
         if (fullscreenImages.length <= 1) return;
-        
+
         // Calculate new index with single step navigation
         currentFullscreenIndex += direction;
-        
+
         // Handle boundaries
         if (currentFullscreenIndex < 0) {
             currentFullscreenIndex = fullscreenImages.length - 1;
         } else if (currentFullscreenIndex >= fullscreenImages.length) {
             currentFullscreenIndex = 0;
         }
-        
+
         // Update the displayed image
         updateFullscreenImage();
     }
-    
+
     // Function to update the fullscreen view with current image
     function updateFullscreenImage() {
         const currentImage = fullscreenImages[currentFullscreenIndex];
         if (!currentImage) return;
-        
+
         // Update image with fade effect
         const img = fullScreenDiv.querySelector('.full_screen_image');
         img.classList.remove('fade-in');
         img.classList.add('fade-out');
-        
+
         // After fade out, update the image and fade in
         setTimeout(() => {
             img.src = currentImage.src;
             img.alt = currentImage.alt;
             img.classList.remove('fade-out');
             img.classList.add('fade-in');
-            
+
             // Update title
             const title = fullScreenDiv.querySelector('.full_screen_title');
             if (title) title.textContent = currentImage.alt;
-            
+
             // Update WhatsApp link
             const whatsappButton = fullScreenDiv.querySelector('.whatsapp_button');
             if (whatsappButton) {
                 whatsappButton.href = `https://wa.me/+966506411444?text=💎%20طلب%20حجز%20عرض%20جديد%20💎%0A%0Aسلام%20عليكم،%20حاب%20أسأل%20عن%20عرض%0A*${encodeURIComponent(currentImage.alt)}*%0Aوحاب%20أعرف%20تفاصيل%20أكثر%20عن%20عروضكم%20المشابهة.%0A%0A🔗%20رابط%20صورة%20العرض:%0A${window.location.origin}/${encodeURIComponent(currentImage.src)}%0A%0Aبإنتظار%20ردكم%20وشكرًا%20لكم`;
             }
-            
+
             // Update arrow visibility
             updateArrowVisibility();
         }, 200); // Match this with CSS transition time
     }
-    
+
     // Function to update arrow visibility based on current index
     function updateArrowVisibility() {
         const leftArrow = fullScreenDiv.querySelector('.nav-arrow.left');
         const rightArrow = fullScreenDiv.querySelector('.nav-arrow.right');
-        
+
         if (fullscreenImages.length <= 1) {
             leftArrow?.classList.add('hidden');
             rightArrow?.classList.add('hidden');
@@ -635,13 +629,13 @@ function openFullScreenImage(src, text, index = 0) {
             rightArrow?.classList.remove('hidden');
         }
     }
-    
+
     // Close fullscreen function
     function closeFullScreenImage() {
         if (!currentFullscreenContainer) return;
-        
+
         currentFullscreenContainer.style.opacity = '0';
-        
+
         setTimeout(() => {
             if (currentFullscreenContainer.cleanup) {
                 currentFullscreenContainer.cleanup();
@@ -684,10 +678,9 @@ function openFullScreenImage(src, text, index = 0) {
 
 
 
-document.getElementById("indoforall_comment_form").addEventListener("submit", async function (event) {
+document.getElementById("user_comment_form").addEventListener("submit", async function (event) {
     event.preventDefault();
-    console.log('Hi')
-    const button = document.querySelector("#indoforall_comment_form button[type='submit']");
+    const button = document.querySelector("#user_comment_form button[type='submit']");
 
     // Disable button to prevent multiple submissions
     button.disabled = true;
@@ -695,9 +688,9 @@ document.getElementById("indoforall_comment_form").addEventListener("submit", as
     button.innerText = "جاري النشر";
 
     // Get input values
-    let reviewer_name = document.getElementById("indoforall_comment_username").value.trim();
-    let comment = document.getElementById("indoforall_comment_text").value.trim();
-    let stars = parseInt(document.getElementById("indoforall_comment_stars").value);
+    let reviewer_name = document.getElementById("user_comment_username").value.trim();
+    let comment = document.getElementById("user_comment_text").value.trim();
+    let stars = parseInt(document.getElementById("user_comment_stars").value);
     let review_date = new Date().toISOString().split("T")[0]; // format: YYYY-MM-DD
 
     try {
@@ -723,7 +716,7 @@ document.getElementById("indoforall_comment_form").addEventListener("submit", as
 
         if (insertError) throw insertError;
 
-        document.getElementById("indoforall_comment_form").reset();
+        document.getElementById("user_comment_form").reset();
         await fetchReviews(); // Refresh UI
         showSuccessNotification();
 
@@ -747,8 +740,8 @@ async function fetchReviews() {
 
         if (error) throw error;
 
-        let indoforall_clint_rate_area = document.getElementById("indoforall_clint_rate_area");
-        indoforall_clint_rate_area.innerHTML = ""; // Clear old reviews
+        let user_clint_rate_area = document.getElementById("user_clint_rate_area");
+        user_clint_rate_area.innerHTML = ""; // Clear old reviews
 
         data.forEach(item => {
             const { review_date, reviewer_name, comment, stars } = item;
@@ -759,22 +752,22 @@ async function fetchReviews() {
             clintRateDiv.classList.add("indoforall_rate_div");
 
             clintRateDiv.innerHTML = `
-                <div class="indoforall_clint_rate_date_div">
+                <div class="card_clint_rate_date_div">
                     <h3>${review_date}</h3>
                 </div>
-                <div class="indoforall_clint_rate_info_div">
+                <div class="card_clint_rate_info_div">
                     <img src="مكتب-سياحي/مكتب-سياحي.webp" alt="وقت الصعود للسفر والسياحة - مكتب سياحي" title="وقت الصعود للسفر والسياحة - مكتب سياحي">
                     <h4>${reviewer_name}</h4>
                 </div>
-                <div class="indoforall_clint_rate_comment_div">
+                <div class="card_clint_rate_comment_div">
                     <h5>${comment}</h5>
                 </div>
-                <div class="indoforall_clint_rate_star_div">
+                <div class="card_clint_rate_star_div">
                     ${"★".repeat(stars)}${"☆".repeat(5 - stars)}
                 </div>
             `;
 
-            indoforall_clint_rate_area.appendChild(clintRateDiv);
+            user_clint_rate_area.appendChild(clintRateDiv);
         });
 
     } catch (error) {
@@ -784,7 +777,7 @@ async function fetchReviews() {
 
 // Function to Show Floating Success Notification
 function showSuccessNotification() {
-    let notification = document.getElementById("indoforall_success_notification");
+    let notification = document.getElementById("new_comment_success_notification");
     notification.style.display = "block";
 
     setTimeout(() => {
