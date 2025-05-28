@@ -372,6 +372,8 @@ function updateContent(container, index, data) {
     }
 
     container.appendChild(row);
+    console.log('row', row);
+    console.log('container', container);
 
     // Fade in
     setTimeout(() => {
@@ -402,8 +404,8 @@ async function getAndTransformSupabaseData() {
                 title_card_image: offer.title_card_image
             };
 
-            if (offer.images) {
-                offer.images.forEach((img, i) => {
+            if (offer.sup_images_array) {
+                offer.sup_images_array.forEach((img, i) => {
                     result[`image_${i + 1}`] = [
                         img[0] || '',
                         img[1] || offer.title
@@ -445,43 +447,102 @@ document.addEventListener('DOMContentLoaded', () => {
     loadDataAndCreateCards();
 });
 
+// Global variables to track current image and all images in the gallery
+let currentFullscreenIndex = 0;
+let fullscreenImages = [];
+let currentFullscreenContainer = null;
 
+function openFullScreenImage(src, text, index = 0) {
+    // Get all scrollable cards in the current row
+    const currentRow = document.querySelector('.scrollable_cards_row:not([style*="display: none"])');
+    if (!currentRow) return;
+    
+    // Get all images in the current row
+    const cards = Array.from(currentRow.querySelectorAll('.scrollable_card'));
+    fullscreenImages = cards.map(card => ({
+        src: card.querySelector('img').src,
+        alt: card.querySelector('img').alt || text
+    }));
 
-function openFullScreenImage(src, text) {
+    // Set current index based on the clicked image
+    currentFullscreenIndex = fullscreenImages.findIndex(img => img.src === src || img.src.endsWith(src));
+    if (currentFullscreenIndex === -1) currentFullscreenIndex = 0;
+
+    // If we're already showing a fullscreen container, just update the image
+    if (currentFullscreenContainer) {
+        updateFullscreenImage();
+        return;
+    }
 
     // Disable document scrolling
     document.body.style.overflow = 'hidden';
 
-
-    /* Create the sull screen container div */
+    // Create the full screen container
     const fullScreenDiv = document.createElement('div');
     fullScreenDiv.className = 'full_screen_container';
+    currentFullscreenContainer = fullScreenDiv;
 
     // Add animation class for fade-in effect
     setTimeout(() => fullScreenDiv.classList.add('visible'), 10);
 
+    // Create navigation arrows with proper event delegation
+    const leftArrow = document.createElement('button');
+    leftArrow.className = 'nav-arrow right' + (fullscreenImages.length <= 1 ? ' hidden' : '');
+    leftArrow.innerHTML = '&larr;';
+    leftArrow.title = 'الصورة السابقة';
+    leftArrow.addEventListener('click', (e) => {
+        e.stopPropagation();
+        navigateImages(1);
+    });
+
+    const rightArrow = document.createElement('button');
+    rightArrow.className = 'nav-arrow left' + (fullscreenImages.length <= 1 ? ' hidden' : '');
+    rightArrow.innerHTML = '&rarr;';
+    rightArrow.title = 'الصورة التالية';
+    rightArrow.addEventListener('click', (e) => {
+        e.stopPropagation();
+        navigateImages(-1);
+    });
+
+    // Create exit button
     const exitButton = document.createElement('button');
     exitButton.innerText = 'عودة';
     exitButton.className = 'exit_button';
+    exitButton.title = 'إغلاق (Esc)';
     exitButton.addEventListener('click', closeFullScreenImage);
-    fullScreenDiv.appendChild(exitButton);
 
+    // Create title
     const title = document.createElement('h2');
-    title.innerText = text;
     title.className = 'full_screen_title';
-    fullScreenDiv.appendChild(title);
+    title.textContent = fullscreenImages[currentFullscreenIndex]?.alt || text;
 
-    // Full-screen image
+    // Create image container
+    const imageContainer = document.createElement('div');
+    imageContainer.className = 'image-container';
+    
+    // Create full-screen image
     const fullScreenImage = document.createElement('img');
-    fullScreenImage.src = src;
-    fullScreenImage.className = 'full_screen_image';
-    fullScreenDiv.appendChild(fullScreenImage);
+    fullScreenImage.src = fullscreenImages[currentFullscreenIndex]?.src || src;
+    fullScreenImage.alt = fullscreenImages[currentFullscreenIndex]?.alt || text;
+    fullScreenImage.className = 'full_screen_image fade-in';
+    
+    // Add image to container
+    imageContainer.appendChild(fullScreenImage);
 
-    // WhatsApp button
+    // Create WhatsApp button
     const whatsappButton = document.createElement('a');
     whatsappButton.className = 'whatsapp_button';
-    whatsappButton.innerText = 'إرسال هذا العرض';
-    whatsappButton.href = `https://wa.me/+966506411444?text=💎%20طلب%20حجز%20عرض%20جديد%20💎%0A%0Aسلام%20عليكم،%20حاب%20أسأل%20عن%20عرض%0A*${encodeURIComponent(text)}*%0Aوحاب%20أعرف%20تفاصيل%20أكثر%20عن%20عروضكم%20المشابهة.%0A%0A🔗%20رابط%20صورة%20العرض:%0Ahttps://mohammed-website.github.io/boardingsauditravel/${encodeURIComponent(src)}%0A%0Aبإنتظار%20ردكم%20وشكرًا%20لكم`;
+    whatsappButton.innerHTML = '<ion-icon name="logo-whatsapp"></ion-icon> إرسال هذا العرض';
+    whatsappButton.href = `https://wa.me/+966506411444?text=💎%20طلب%20حجز%20عرض%20جديد%20💎%0A%0Aسلام%20عليكم،%20حاب%20أسأل%20عن%20عرض%0A*${encodeURIComponent(fullscreenImages[currentFullscreenIndex]?.alt || text)}*%0Aوحاب%20أعرف%20تفاصيل%20أكثر%20عن%20عروضكم%20المشابهة.%0A%0A🔗%20رابط%20صورة%20العرض:%0A${window.location.origin}/${encodeURIComponent(fullscreenImages[currentFullscreenIndex]?.src || src)}%0A%0Aبإنتظار%20ردكم%20وشكرًا%20لكم`;
+    whatsappButton.target = '_blank';
+    whatsappButton.rel = 'noopener noreferrer';
+
+    // Assemble the full screen view
+    fullScreenDiv.appendChild(exitButton);
+    fullScreenDiv.appendChild(leftArrow);
+    fullScreenDiv.appendChild(rightArrow);
+    fullScreenDiv.appendChild(title);
+    fullScreenDiv.appendChild(imageContainer);
     fullScreenDiv.appendChild(whatsappButton);
 
     // Close on background click
@@ -489,20 +550,108 @@ function openFullScreenImage(src, text) {
         if (e.target === fullScreenDiv) closeFullScreenImage();
     });
 
+    // Add to DOM
     document.body.appendChild(fullScreenDiv);
 
-    // Smooth close function
-    function closeFullScreenImage() {
-        const fullScreenDiv = document.querySelector('.full_screen_container');
-        if (!fullScreenDiv) return;
+    // Keyboard navigation handler
+    const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+            closeFullScreenImage();
+        } else if (e.key === 'ArrowLeft') {
+            navigateImages(-1);
+        } else if (e.key === 'ArrowRight') {
+            navigateImages(1);
+        }
+    };
+    
+    // Add event listener for keyboard navigation
+    document.addEventListener('keydown', handleKeyDown);
+    
+    // Initial arrow visibility
+    updateArrowVisibility();
 
-
-        fullScreenDiv.style.opacity = '0';
-
-
+    // Cleanup function
+    fullScreenDiv.cleanup = () => {
+        document.removeEventListener('keydown', handleKeyDown);
+        document.body.style.overflow = '';
+    };
+    
+    // Navigation function
+    function navigateImages(direction) {
+        if (fullscreenImages.length <= 1) return;
+        
+        // Calculate new index with single step navigation
+        currentFullscreenIndex += direction;
+        
+        // Handle boundaries
+        if (currentFullscreenIndex < 0) {
+            currentFullscreenIndex = fullscreenImages.length - 1;
+        } else if (currentFullscreenIndex >= fullscreenImages.length) {
+            currentFullscreenIndex = 0;
+        }
+        
+        // Update the displayed image
+        updateFullscreenImage();
+    }
+    
+    // Function to update the fullscreen view with current image
+    function updateFullscreenImage() {
+        const currentImage = fullscreenImages[currentFullscreenIndex];
+        if (!currentImage) return;
+        
+        // Update image with fade effect
+        const img = fullScreenDiv.querySelector('.full_screen_image');
+        img.classList.remove('fade-in');
+        img.classList.add('fade-out');
+        
+        // After fade out, update the image and fade in
         setTimeout(() => {
-            fullScreenDiv.remove();
-            document.body.style.overflow = '';
+            img.src = currentImage.src;
+            img.alt = currentImage.alt;
+            img.classList.remove('fade-out');
+            img.classList.add('fade-in');
+            
+            // Update title
+            const title = fullScreenDiv.querySelector('.full_screen_title');
+            if (title) title.textContent = currentImage.alt;
+            
+            // Update WhatsApp link
+            const whatsappButton = fullScreenDiv.querySelector('.whatsapp_button');
+            if (whatsappButton) {
+                whatsappButton.href = `https://wa.me/+966506411444?text=💎%20طلب%20حجز%20عرض%20جديد%20💎%0A%0Aسلام%20عليكم،%20حاب%20أسأل%20عن%20عرض%0A*${encodeURIComponent(currentImage.alt)}*%0Aوحاب%20أعرف%20تفاصيل%20أكثر%20عن%20عروضكم%20المشابهة.%0A%0A🔗%20رابط%20صورة%20العرض:%0A${window.location.origin}/${encodeURIComponent(currentImage.src)}%0A%0Aبإنتظار%20ردكم%20وشكرًا%20لكم`;
+            }
+            
+            // Update arrow visibility
+            updateArrowVisibility();
+        }, 200); // Match this with CSS transition time
+    }
+    
+    // Function to update arrow visibility based on current index
+    function updateArrowVisibility() {
+        const leftArrow = fullScreenDiv.querySelector('.nav-arrow.left');
+        const rightArrow = fullScreenDiv.querySelector('.nav-arrow.right');
+        
+        if (fullscreenImages.length <= 1) {
+            leftArrow?.classList.add('hidden');
+            rightArrow?.classList.add('hidden');
+        } else {
+            leftArrow?.classList.remove('hidden');
+            rightArrow?.classList.remove('hidden');
+        }
+    }
+    
+    // Close fullscreen function
+    function closeFullScreenImage() {
+        if (!currentFullscreenContainer) return;
+        
+        currentFullscreenContainer.style.opacity = '0';
+        
+        setTimeout(() => {
+            if (currentFullscreenContainer.cleanup) {
+                currentFullscreenContainer.cleanup();
+            }
+            currentFullscreenContainer.remove();
+            currentFullscreenContainer = null;
         }, 500);
     }
 }

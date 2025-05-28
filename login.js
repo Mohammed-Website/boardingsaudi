@@ -267,58 +267,52 @@ function addImageField(url = '', alt = '', isExistingImage = false) {
 
     const fileId = `file-input-${Date.now()}`;
 
+    // Create file input (hidden)
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.id = fileId;
     fileInput.accept = 'image/*';
     fileInput.style.display = 'none';
 
+    // Create file label with icon
     const fileLabel = document.createElement('label');
     fileLabel.htmlFor = fileId;
     fileLabel.className = 'file-label';
-    fileLabel.textContent = isExistingImage ? 'استبدال العرض' : 'تحميل العرض';
+    fileLabel.innerHTML = `
+        <i class="upload-icon">📷</i>
+        <span>${isExistingImage ? 'تغيير الصورة' : 'اختر صورة'}</span>
+    `;
 
     // Add click handler for replacement label
-    fileLabel.addEventListener('click', async (e) => {
-        // Prevent the default action to avoid double-triggering
+    fileLabel.addEventListener('click', (e) => {
         e.preventDefault();
-
-        // Don't handle events that bubbled up from the input itself
         if (e.target === fileInput) return;
-
-        if (isExistingImage && url) {
-            // Show confirmation dialog
-            // Get the file input
-            const fileInput = e.target.closest('.image-field').querySelector('input[type="file"]');
-
-            // Clear the input to allow selecting the same file again
-            fileInput.value = '';
-
-            // Use setTimeout to break the event chain
-            setTimeout(() => {
-                fileInput.click();
-            }, 0);
-        } else {
-            // Use setTimeout to break the event chain
-            setTimeout(() => {
-                fileInput.click();
-            }, 0);
-        }
+        
+        // Clear the input to allow selecting the same file again
+        fileInput.value = '';
+        
+        // Use setTimeout to break the event chain
+        setTimeout(() => fileInput.click(), 0);
     });
 
+    // Create description input
     const descInput = document.createElement('input');
     descInput.type = 'text';
     descInput.className = 'desc-input';
-    descInput.placeholder = 'وصف العرض';
-    descInput.value = alt;
+    descInput.placeholder = 'أدخل وصفًا للصورة';
+    descInput.value = alt || '';
     descInput.required = true;
+    descInput.ariaLabel = 'وصف الصورة';
 
+    // Create remove button
     const removeBtn = document.createElement('button');
     removeBtn.type = 'button';
     removeBtn.className = 'remove-btn';
-    removeBtn.innerHTML = '×';
-    removeBtn.dataset.imageUrl = url;
+    removeBtn.innerHTML = '&times;';
+    removeBtn.ariaLabel = 'إزالة الصورة';
+    removeBtn.dataset.imageUrl = url || '';
 
+    // Create preview container
     const previewContainer = document.createElement('div');
     previewContainer.className = 'preview-container';
 
@@ -327,6 +321,7 @@ function addImageField(url = '', alt = '', isExistingImage = false) {
         const previewImg = document.createElement('img');
         previewImg.src = url;
         previewImg.className = 'image-preview';
+        previewImg.alt = alt || 'معاينة الصورة';
         previewContainer.appendChild(previewImg);
 
         // Add click handler for fullscreen
@@ -341,66 +336,70 @@ function addImageField(url = '', alt = '', isExistingImage = false) {
             hiddenInput.value = url;
             div.appendChild(hiddenInput);
         }
+    } else {
+        // Show placeholder for new uploads
+        const placeholder = document.createElement('div');
+        placeholder.className = 'upload-placeholder';
+        placeholder.innerHTML = '<i class="placeholder-icon">📷</i><span>معاينة الصورة ستظهر هنا</span>';
+        previewContainer.appendChild(placeholder);
     }
 
+    // Set up file input change handler
     fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
             previewContainer.innerHTML = '';
-
-
-            // Limit the visible filename length (e.g., 15 characters)
-            const maxLength = 15;
+            
+            // Update the label to show the file name
+            const maxLength = 20;
             let displayName = file.name;
             if (file.name.length > maxLength) {
-                // Keep file extension
                 const extensionIndex = file.name.lastIndexOf('.');
                 const extension = extensionIndex !== -1 ? file.name.substring(extensionIndex) : '';
-
-                // Truncate the main filename and add ellipsis
                 const mainName = file.name.substring(0, maxLength - extension.length - 3);
                 displayName = mainName + '...' + extension;
             }
+            
+            fileLabel.querySelector('span').textContent = displayName;
 
-            fileLabel.textContent = displayName;
-
-
-
+            // Create and show preview
             const previewImg = document.createElement('img');
             previewImg.src = URL.createObjectURL(file);
             previewImg.className = 'image-preview';
+            previewImg.alt = 'معاينة الصورة المحددة';
             previewContainer.appendChild(previewImg);
 
-            // Add click handler for fullscreen for newly uploaded images
+            // Add fullscreen handler
             previewImg.addEventListener('click', () => {
-                // For newly uploaded files, we'll use the object URL temporarily
-                // Note: This will only work until the page is refreshed
-                // For permanent fullscreen viewing, you'll need to upload first
                 openFullscreenImage(previewImg.src);
             });
 
-            previewImg.onload = function () {
+            // Clean up object URL when done
+            previewImg.onload = function() {
                 URL.revokeObjectURL(this.src);
             };
         }
     });
 
+    // Assemble the DOM elements
     div.appendChild(previewContainer);
+    div.appendChild(descInput);
     div.appendChild(fileLabel);
     div.appendChild(fileInput);
-    div.appendChild(descInput);
     div.appendChild(removeBtn);
 
-    removeBtn.addEventListener('click', () => {
+    // Handle remove button click
+    removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
-
             if (url) {
                 if (!currentOffer.removedImages) {
                     currentOffer.removedImages = [];
                 }
                 currentOffer.removedImages.push(url);
             }
-            div.remove();
+            div.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => div.remove(), 300);
         }
     });
 
