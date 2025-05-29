@@ -1003,12 +1003,6 @@ header.hidden {
   border-radius: 2px;
 }
 
-#indoforall_clint_rate_section {
-  display: flex;
-  overflow: hidden;
-  border-radius: 3px;
-}
-
 #user_clint_rate_area {
   background: rgb(225, 227, 226);
   width: 100%;
@@ -1029,7 +1023,7 @@ header.hidden {
   transform: translateY(0);
 }
 
-.indoforall_rate_div {
+.user_card_rate_div {
   background: rgb(46, 46, 46);
   color: white;
   min-width: 35rem;
@@ -1044,7 +1038,7 @@ header.hidden {
   scroll-snap-align: center;
 }
 
-.indoforall_rate_div:hover {
+.user_card_rate_div:hover {
   box-shadow: 0 0 3px 0.5px rgb(0, 255, 0);
 }
 
@@ -1392,7 +1386,7 @@ footer * {
 
 
 
-  .indoforall_rate_div {
+  .user_card_rate_div {
     min-width: 65vw;
     margin: 0 8px;
     padding: 5px 2px;
@@ -1760,7 +1754,7 @@ footer * {
     font-size: 5.5vw;
   }
 
-  .indoforall_rate_div {
+  .user_card_rate_div {
     min-width: 90vw;
     margin: 0 5px;
   }

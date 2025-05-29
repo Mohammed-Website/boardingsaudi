@@ -749,7 +749,7 @@ async function fetchReviews() {
             if (!comment.trim()) return;
 
             let clintRateDiv = document.createElement("div");
-            clintRateDiv.classList.add("indoforall_rate_div");
+            clintRateDiv.classList.add("user_card_rate_div");
 
             clintRateDiv.innerHTML = `
                 <div class="card_clint_rate_date_div">
