@@ -37,7 +37,7 @@ async function loadOffers() {
     offersContainer.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>جاري تحميل العروض...</p></div>';
 
     const { data, error } = await supabase
-        .from('travel_offers')
+        .from('boarding_saudi_travel')
         .select('*')
 
     if (error) {
@@ -158,7 +158,7 @@ async function editOffer(offerId, event) {
     clickedButton.innerHTML = '<span class="spinner"></span>';
 
     const { data, error } = await supabase
-        .from('travel_offers')
+        .from('boarding_saudi_travel')
         .select('*')
         .eq('id', offerId)
         .single();
@@ -176,7 +176,6 @@ async function editOffer(offerId, event) {
 
     // Clear and reset title card image
     const titleCardPreview = document.getElementById('title-card-preview');
-    const titleCardInput = document.getElementById('title-card-image');
     const removeTitleCardBtn = document.getElementById('remove-title-card-image');
 
     if (data.title_card_image) {
@@ -473,16 +472,16 @@ async function saveOffer() {
                     const file = titleCardFileInput.files[0];
                     const fileExt = file.name.split('.').pop();
                     const fileName = `title-card-${Date.now()}.${fileExt}`;
-                    const filePath = `boarding-saudi-travel/${fileName}`;
+                    const filePath = fileName;
 
                     // Delete old title card image if it exists
                     if (currentOffer?.title_card_image) {
                         try {
                             const urlObj = new URL(currentOffer.title_card_image);
-                            const oldFilePath = urlObj.pathname.split('/offer-images/')[1];
+                            const oldFilePath = urlObj.pathname.split('/').pop();
                             await supabase
                                 .storage
-                                .from('offer-images')
+                                .from('boarding-saudi-travel')
                                 .remove([oldFilePath]);
                         } catch (e) {
                             console.error('Error deleting old title card image:', e);
@@ -492,7 +491,7 @@ async function saveOffer() {
                     // Upload the new image
                     const { error: uploadError } = await supabase
                         .storage
-                        .from('offer-images')
+                        .from('boarding-saudi-travel')
                         .upload(filePath, file, {
                             cacheControl: '3600',
                             upsert: false,
@@ -504,7 +503,7 @@ async function saveOffer() {
                     // Get the public URL
                     const { data: { publicUrl } } = supabase
                         .storage
-                        .from('offer-images')
+                        .from('boarding-saudi-travel')
                         .getPublicUrl(filePath);
 
                     titleCardImageUrl = publicUrl;
@@ -524,7 +523,7 @@ async function saveOffer() {
             try {
                 if (currentOffer?.title_card_image) {
                     const urlObj = new URL(currentOffer.title_card_image);
-                    const filePath = urlObj.pathname.split('/offer-images/')[1];
+                    const filePath = urlObj.pathname.split('/boarding-saudi-travel/')[1];
                     filesToDelete.add(filePath);
                 }
                 titleCardImageUrl = null;
@@ -587,17 +586,16 @@ async function saveOffer() {
                 if (isExisting && fileInput.files.length > 0) {
 
                     const file = fileInput.files[0];
-                    const fileExt = file.name.split('.').pop();
                     const fileName = originalUrl.split('/').pop(); // Keep same filename
-                    const filePath = `boarding-saudi-travel/${fileName}`;
+                    const filePath = fileName; // Store directly in root
 
                     // Delete old image first
                     try {
                         const urlObj = new URL(originalUrl);
-                        const oldFilePath = urlObj.pathname.split('/offer-images/')[1];
+                        const oldFilePath = urlObj.pathname.split('/').pop();
                         await supabase
                             .storage
-                            .from('offer-images')
+                            .from('boarding-saudi-travel')
                             .remove([oldFilePath]);
                         removedImageUrls.add(originalUrl);
                     } catch (e) {
@@ -606,7 +604,7 @@ async function saveOffer() {
 
                     const { error: uploadError } = await supabase
                         .storage
-                        .from('offer-images')
+                        .from('boarding-saudi-travel')
                         .upload(filePath, file, {
                             upsert: true, // Overwrite existing
                             contentType: file.type
@@ -616,7 +614,7 @@ async function saveOffer() {
 
                     const { data: { publicUrl } } = supabase
                         .storage
-                        .from('offer-images')
+                        .from('boarding-saudi-travel')
                         .getPublicUrl(filePath);
 
                     // Track this replacement
@@ -646,11 +644,11 @@ async function saveOffer() {
                     const file = fileInput.files[0];
                     const fileExt = file.name.split('.').pop();
                     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
-                    const filePath = `boarding-saudi-travel/${fileName}`;
+                    const filePath = fileName;
 
                     const { error: uploadError } = await supabase
                         .storage
-                        .from('offer-images')
+                        .from('boarding-saudi-travel')
                         .upload(filePath, file, {
                             upsert: true, // Overwrite existing
                             contentType: file.type
@@ -660,7 +658,7 @@ async function saveOffer() {
 
                     const { data: { publicUrl } } = supabase
                         .storage
-                        .from('offer-images')
+                        .from('boarding-saudi-travel')
                         .getPublicUrl(filePath);
 
                     finalImages.push([publicUrl, descInput.value]);
@@ -703,12 +701,12 @@ async function saveOffer() {
                     const file = fileInput.files[0];
                     const fileExt = file.name.split('.').pop();
                     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
-                    const filePath = `boarding-saudi-travel/${fileName}`;
+                    const filePath = fileName;
 
                     // Upload the file to Supabase storage
                     const { error: uploadError } = await supabase
                         .storage
-                        .from('offer-images')
+                        .from('boarding-saudi-travel')
                         .upload(filePath, file, {
                             cacheControl: '3600',
                             upsert: false,
@@ -720,7 +718,7 @@ async function saveOffer() {
                     // Get the public URL
                     const { data: { publicUrl } } = supabase
                         .storage
-                        .from('offer-images')
+                        .from('boarding-saudi-travel')
                         .getPublicUrl(filePath);
 
                     sup_images_array.push([publicUrl, description]);
@@ -740,7 +738,7 @@ async function saveOffer() {
             for (const url of removedImageUrls) {
                 try {
                     const urlObj = new URL(url);
-                    const filePath = urlObj.pathname.split('/offer-images/')[1];
+                    const filePath = urlObj.pathname.split('/boarding-saudi-travel/')[1];
                     filesToDelete.add(filePath);
                 } catch (e) {
                     console.error('Error parsing removed image URL:', e);
@@ -750,7 +748,7 @@ async function saveOffer() {
             if (filesToDelete.size > 0) {
                 const { error: deleteError } = await supabase
                     .storage
-                    .from('offer-images')
+                    .from('boarding-saudi-travel')
                     .remove([...filesToDelete]);
 
                 if (deleteError) {
@@ -771,12 +769,12 @@ async function saveOffer() {
                 const file = titleCardInput.files[0];
                 const fileExt = file.name.split('.').pop();
                 const fileName = `title-card-${Date.now()}.${fileExt}`;
-                const filePath = `boarding-saudi-travel/${fileName}`;
+                const filePath = fileName;;
 
                 // Upload new title card image
                 const { error: uploadError } = await supabase
                     .storage
-                    .from('offer-images')
+                    .from('boarding-saudi-travel')
                     .upload(filePath, file, {
                         cacheControl: '3600',
                         upsert: false,
@@ -788,7 +786,7 @@ async function saveOffer() {
                 // Get public URL
                 const { data: { publicUrl } } = supabase
                     .storage
-                    .from('offer-images')
+                    .from('boarding-saudi-travel')
                     .getPublicUrl(filePath);
 
                 // If there was a previous title card image, mark it for deletion
@@ -827,13 +825,13 @@ async function saveOffer() {
 
         if (offerId) {
             const { error } = await supabase
-                .from('travel_offers')
+                .from('boarding_saudi_travel')
                 .update(offerData)
                 .eq('id', offerId);
             if (error) throw error;
         } else {
             const { error } = await supabase
-                .from('travel_offers')
+                .from('boarding_saudi_travel')
                 .insert(offerData);
             if (error) throw error;
         }
@@ -856,7 +854,7 @@ async function deleteOffer(offerId) {
     try {
         // First get the offer to access image URLs
         const { data: offer, error: fetchError } = await supabase
-            .from('travel_offers')
+            .from('boarding_saudi_travel')
             .select('*')
             .eq('id', offerId)
             .single();
@@ -872,11 +870,11 @@ async function deleteOffer(offerId) {
                 try {
                     const url = img[0];
                     // For newer Supabase storage URLs:
-                    if (url.includes('/storage/v1/object/public/offer-images/')) {
-                        return url.split('/storage/v1/object/public/offer-images/')[1];
+                    if (url.includes('/storage/v1/object/public/boarding-saudi-travel/')) {
+                        return url.split('/storage/v1/object/public/boarding-saudi-travel/')[1];
                     }
                     // For older format or direct paths:
-                    return url.replace(/^.*offer-images\//, '');
+                    return url.replace(/^.*boarding-saudi-travel\//, '');
                 } catch (e) {
                     console.error('Error parsing image URL:', img[0], e);
                     return null;
@@ -889,11 +887,11 @@ async function deleteOffer(offerId) {
             try {
                 const url = offer.title_card_image;
                 // For newer Supabase storage URLs:
-                if (url.includes('/storage/v1/object/public/offer-images/')) {
-                    filesToDelete.push(url.split('/storage/v1/object/public/offer-images/')[1]);
+                if (url.includes('/storage/v1/object/public/boarding-saudi-travel/')) {
+                    filesToDelete.push(url.split('/storage/v1/object/public/boarding-saudi-travel/')[1]);
                 } else {
                     // For older format or direct paths:
-                    filesToDelete.push(url.replace(/^.*offer-images\//, ''));
+                    filesToDelete.push(url.replace(/^.*boarding-saudi-travel\//, ''));
                 }
             } catch (e) {
                 console.error('Error parsing title card image URL:', offer.title_card_image, e);
@@ -905,7 +903,7 @@ async function deleteOffer(offerId) {
 
             const { error: deleteError, data: deleteResult } = await supabase
                 .storage
-                .from('offer-images')
+                .from('boarding-saudi-travel')
                 .remove(filesToDelete);
 
 
@@ -922,7 +920,7 @@ async function deleteOffer(offerId) {
 
         // 4. Delete the offer record from database
         const { error } = await supabase
-            .from('travel_offers')
+            .from('boarding_saudi_travel')
             .delete()
             .eq('id', offerId);
 
@@ -980,7 +978,7 @@ async function cleanupUnusedImages() {
     try {
         // 1. Get all used images from the database
         const { data: offers, error: offersError } = await supabase
-            .from('travel_offers')
+            .from('boarding_saudi_travel')
             .select('title_card_image, sup_images_array');
 
         if (offersError) throw offersError;
@@ -1057,7 +1055,7 @@ async function cleanupUnusedImages() {
 
 
         // 3. List all files in the storage bucket
-        const bucketName = 'offer-images';
+        const bucketName = 'boarding-saudi-travel';
         const folderName = 'boarding-saudi-travel';
 
 

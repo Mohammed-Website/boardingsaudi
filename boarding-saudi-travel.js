@@ -385,7 +385,7 @@ function updateContent(container, index, data) {
 async function getAndTransformSupabaseData() {
     try {
         const { data, error } = await supabase
-            .from('travel_offers')
+            .from('boarding_saudi_travel')
             .select('*')
             .order('created_at', { ascending: false });
 
