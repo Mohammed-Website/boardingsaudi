@@ -643,8 +643,10 @@ async function saveOffer() {
 
                     const file = fileInput.files[0];
                     const fileExt = file.name.split('.').pop();
-                    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+                    const shortId = Math.random().toString(36).substring(2, 6); // shorter random ID
+                    const fileName = `${shortId}.${fileExt}`;
                     const filePath = fileName;
+                    
 
                     const { error: uploadError } = await supabase
                         .storage
@@ -700,8 +702,10 @@ async function saveOffer() {
                 try {
                     const file = fileInput.files[0];
                     const fileExt = file.name.split('.').pop();
-                    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+                    const shortId = Math.random().toString(36).substring(2, 6); // shorter random ID
+                    const fileName = `${shortId}.${fileExt}`;
                     const filePath = fileName;
+
 
                     // Upload the file to Supabase storage
                     const { error: uploadError } = await supabase
@@ -1056,7 +1060,6 @@ async function cleanupUnusedImages() {
 
         // 3. List all files in the storage bucket
         const bucketName = 'boarding-saudi-travel';
-        const folderName = 'boarding-saudi-travel';
 
 
         // Recursive function to list all files in a folder and its subfolders
@@ -1099,7 +1102,7 @@ async function cleanupUnusedImages() {
         };
 
         // Get all files
-        const files = await listAllFiles(folderName);
+        const files = await listAllFiles();
 
         // 4. Find and delete unused files
         const deletedFiles = [];
@@ -1165,8 +1168,9 @@ async function cleanupUnusedImages() {
 }
 
 // Add this function to the window object so you can call it from the browser console
-window.cleanupUnusedImages = cleanupUnusedImages;
 cleanupUnusedImages();
+
+
 // Close when clicking X or outside image
 fullscreenViewer.addEventListener('click', (e) => {
     if (e.target.classList.contains('fullscreen-viewer') ||
