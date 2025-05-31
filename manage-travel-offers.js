@@ -242,19 +242,21 @@ function initializeTitleCardHandlers() {
 document.addEventListener('DOMContentLoaded', initializeTitleCardHandlers);
 
 document.getElementById('remove-title-card-image').addEventListener('click', function () {
-    const preview = document.getElementById('title-card-preview');
-    const input = document.getElementById('title-card-image');
-    const removeBtn = document.getElementById('remove-title-card-image');
+    if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
+        const preview = document.getElementById('title-card-preview');
+        const input = document.getElementById('title-card-image');
+        const removeBtn = document.getElementById('remove-title-card-image');
 
-    preview.src = '';
-    preview.style.display = 'none';
-    input.value = '';
-    removeBtn.style.display = 'none';
+        preview.src = '';
+        preview.style.display = 'none';
+        input.value = '';
+        removeBtn.style.display = 'none';
 
-    // Mark for removal if this was an existing image
-    if (currentOffer?.title_card_image) {
-        if (!currentOffer.removedTitleCardImage) {
-            currentOffer.removedTitleCardImage = currentOffer.title_card_image;
+        // Mark for removal if this was an existing image
+        if (currentOffer?.title_card_image) {
+            if (!currentOffer.removedTitleCardImage) {
+                currentOffer.removedTitleCardImage = currentOffer.title_card_image;
+            }
         }
     }
 });
@@ -387,18 +389,20 @@ function addImageField(url = '', alt = '', isExistingImage = false) {
     div.appendChild(fileInput);
     div.appendChild(removeBtn);
 
-    // Handle remove button click
+    // In the remove button click handler
     removeBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
-            if (url) {
-                if (!currentOffer.removedImages) {
-                    currentOffer.removedImages = [];
+            // Only try to add to removedImages if currentOffer exists
+            if (url && window.currentOffer) {
+                if (!window.currentOffer.removedImages) {
+                    window.currentOffer.removedImages = [];
                 }
-                currentOffer.removedImages.push(url);
+                window.currentOffer.removedImages.push(url);
             }
+            // Add fade out animation and remove the element
             div.style.animation = 'fadeOut 0.3s ease';
-            setTimeout(() => div.remove(), 300);
+            div.addEventListener('animationend', () => div.remove(), { once: true });
         }
     });
 
@@ -646,7 +650,7 @@ async function saveOffer() {
                     const shortId = Math.random().toString(36).substring(2, 6); // shorter random ID
                     const fileName = `${shortId}.${fileExt}`;
                     const filePath = fileName;
-                    
+
 
                     const { error: uploadError } = await supabase
                         .storage
@@ -823,7 +827,7 @@ async function saveOffer() {
             title,
             sup_images_array,
             title_card_image: finalTitleCardImage,
-            updated_at: new Date().toISOString()
+            created_at: new Date().toISOString()
         };
 
 

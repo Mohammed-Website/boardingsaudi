@@ -832,21 +832,19 @@ document.querySelectorAll('.mughader_dynamic_direction_input_class').forEach(inp
 
 
 
-/* Insert new click data in the google sheet */
-function insertNewClick(columnName) {
-    const scriptURL = "https://script.google.com/macros/s/AKfycbyU-p7z3tHF0I1K0GCmjcRG3CaG0NPkGyMPTvhlGPISxwIYrt6ueD7O2iHSza9SPOP3/exec";
 
-    // Trim the column name before passing it
-    fetch(`${scriptURL}?columnName=${encodeURIComponent(columnName.trim())}`)
-        .then(response => response.text())
-        .then(data => console.log("Response:", data))
-        .catch(error => console.error("Error:", error));
-}
+
+
+
+
+
+
+
 
 /* Open WhatsApp */
 openWhatsAppNumber = function () {
 
-    insertNewClick('alseef.com');
+    insertNewClick('boarding-saudi-travel');
 
     const whatsappNumber = "+966506411444";
     const message = encodeURIComponent('سلام عليكم ورحمة الله وبركاته'); // Optional pre-filled message
@@ -856,3 +854,177 @@ openWhatsAppNumber = function () {
 
 
 
+/* Function to insert a new click number in the Supabase */
+async function insertNewClick(website) {
+
+    // Step 1: Get current month name
+    const monthNames = [
+        "january", "february", "march", "april",
+        "may", "june", "july", "august",
+        "september", "october", "november", "december"
+    ];
+    const currentMonth = monthNames[new Date().getMonth()];
+
+    // Step 2: Fetch the current row for the website
+    const { data, error } = await supabase
+        .from("click_counter")
+        .select("*")
+        .eq("website", website)
+        .single();
+
+    if (error) {
+        console.error("Error fetching data:", error.message);
+        return;
+    }
+
+    // Step 3: Parse the current value (e.g., "Clicks 4")
+    let rawValue = data[currentMonth];
+    let currentCount = 0;
+
+    if (rawValue && typeof rawValue === "string" && rawValue.startsWith("Clicks ")) {
+        currentCount = parseInt(rawValue.replace("Clicks ", ""), 10) || 0;
+    }
+
+    // Step 4: Increment the value
+    let newCount = currentCount + 1;
+    let newValue = `Clicks ${newCount}`;
+
+    // Step 5: Update the table
+    const { error: updateError } = await supabase
+        .from("click_counter")
+        .update({ [currentMonth]: newValue })
+        .eq("website", website);
+
+    if (updateError) {
+        console.error("Error updating value:", updateError.message);
+        return;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Function to store the emails in the Supabase */
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+document.querySelector('.email_subscription_form button').addEventListener('click', async () => {
+    const emailInput = document.querySelector('.email_subscription_form input');
+    const email = emailInput.value.trim();
+
+    if (!email || !isValidEmail(email)) {
+        alert('يرجى إدخال بريد إلكتروني صالح');
+        emailInput.focus();
+        return;
+    }
+
+    const domainColumn = 'boarding-saudi-travel'; // Set your domain column here
+    await saveEmailToDomainColumn(domainColumn, email);
+});
+
+async function saveEmailToDomainColumn(columnName, email) {
+    // Step 1: Get all rows
+    const { data: rows, error } = await supabase
+        .from('account_counter')
+        .select(`id, ${columnName}`);
+
+    if (error) {
+        console.error('Fetch error:', error);
+        return;
+    }
+
+    // Step 2: Find first row where the column is null (empty)
+    const emptyRow = rows.find(row => !row[columnName]);
+
+    if (emptyRow) {
+        // Step 3: Update that row
+        const { error: updateError } = await supabase
+            .from('account_counter')
+            .update({ [columnName]: email })
+            .eq('id', emptyRow.id);
+
+        if (updateError) console.error('Update error:', updateError);
+        else alert('تم الاشتراك بنجاح!');
+    } else {
+        // Step 4: Insert a new row
+        const { error: insertError } = await supabase
+            .from('account_counter')
+            .insert([{ [columnName]: email }]);
+
+        if (insertError) console.error('Insert error:', insertError);
+        else alert('تم الاشتراك بنجاح!');
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Function to count webstie vistrors number in the Supabase */
+async function updateVisitorCount(domain) {
+    const column = domain.replace(/\./g, '_'); // Convert "example.com" → "example_com"
+
+    // First, get the current count
+    const { data, error: fetchError } = await supabase
+        .from('visitor_counter')
+        .select(column)
+        .eq('id', 1)
+        .single();
+
+    if (fetchError) {
+        console.error('Error fetching visitor count:', fetchError);
+        return;
+    }
+
+    const currentCount = data[column] || 0;
+    const newCount = currentCount + 1;
+
+    // Now, update the count
+    const { error: updateError } = await supabase
+        .from('visitor_counter')
+        .update({ [column]: newCount })
+        .eq('id', 1);
+
+    if (updateError) {
+        console.error('Error updating visitor count:', updateError);
+    } else {
+        console.log(`Visitor count updated for ${domain}: ${newCount}`);
+    }
+}
+
+// Run the website visitors counter
+updateVisitorCount('boarding-saudi-travel');
