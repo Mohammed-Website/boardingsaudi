@@ -83,15 +83,17 @@ document.getElementById("offerForm").addEventListener("submit", function (e) {
 
     let message = `أهلاً، حاب اطلب عرض سياحي مخصص بناءً على التالي:\n\n`;
     message += `🧳 نوع العرض: ${offerType}`;
-    message += `\n👤 عدد المسافرين: ${adults} بالغ / ${children} طفل`;
-    if (childAges.length > 0) message += ` (أعمارهم: ${childAges.join(', ')})`;
+    message += `\n👤 عدد المسافرين: ${adults} بالغ${children && parseInt(children) > 0 ? ` / ${children} طفل` : ''}`;
+    if (children && parseInt(children) > 0 && childAges.length > 0) {
+        message += ` (أعمارهم: ${childAges.join(', ')})`;
+    }
     message += `\n📅 تاريخ الذهاب: ${departure}\n🕒 عدد الأيام: ${totalDays}\n🔙 تاريخ العودة: ${returnDate}`;
     message += `\n🌍 الوجهات: ${countries} (${cities})`;
     message += `\n✈️ تشمل الباقة: ${inclusions.join(', ') || 'بدون'}`;
     message += `\n💳 ميزانية العرض: ${budgetType}\n\nيرجى تزويدي بأفضل عرض متوفر. شكرًا!`;
 
     const encoded = encodeURIComponent(message);
-    const phone = "+6282210081028"; // استبدل هذا برقمك
+    const phone = "+966506411444"; // استبدل هذا برقمك
     window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank');
 });
 
