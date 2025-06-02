@@ -63,6 +63,12 @@ document.getElementById("children").addEventListener("input", () => {
 document.getElementById("offerForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
+
+    /* insert a new click count in the Supbase database */
+    insertNewClick('boarding-saudi-travel');
+
+
+
     const adults = document.getElementById("adults").value;
     const children = document.getElementById("children").value;
     const childAges = Array.from(document.getElementById("childrenAges").querySelectorAll('input')).map(i => i.value).filter(a => a);
