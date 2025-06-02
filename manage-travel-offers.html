@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم - عروض السفر</title>
 
-
-
-
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="website-analysis.css">
     <link rel="stylesheet" href="manage-travel-offers.css">
-
-
-
-
-
-
 </head>
 
 <body>
@@ -24,10 +18,25 @@
 
 
 
+    <div class="sidebar-toggle" onclick="toggleSidebar()">تحليلات ☰</div>
+
+    <div class="sidebar" id="sidebar">
+        <button onclick="loadClickData()">📞 بيانات تواصل العملاء</button>
+        <button onclick="loadVisitorData()">🌐 بيانات زوار الموقع</button>
+    </div>
+
+    <div class="content" id="output">
+        <h2></h2>
+    </div>
+
+
+
+
+
 
 
     <div class="container">
-        <h1 class="section-title">لوحة التحكم - العروض السياحية</h1>
+        <h1 class="section-title">لوحة تحكم العروض السياحية</h1>
 
         <button id="add-offer" class="btn primary">إضافة عرض جديد</button>
 

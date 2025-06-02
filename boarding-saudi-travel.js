@@ -995,34 +995,49 @@ async function saveEmailToDomainColumn(columnName, email) {
 
 
 /* Function to count webstie vistrors number in the Supabase */
-async function updateVisitorCount(domain) {
-    const column = domain.replace(/\./g, '_'); // Convert "example.com" → "example_com"
+async function updateVisitorCount(website) {
 
-    // First, get the current count
-    const { data, error: fetchError } = await supabase
-        .from('visitor_counter')
-        .select(column)
-        .eq('id', 1)
+    // Step 1: Get current month name
+    const monthNames = [
+        "january", "february", "march", "april",
+        "may", "june", "july", "august",
+        "september", "october", "november", "december"
+    ];
+    const currentMonth = monthNames[new Date().getMonth()];
+
+    // Step 2: Fetch the current row for the website
+    const { data, error } = await supabase
+        .from("visitor_counter")
+        .select("*")
+        .eq("website", website)
         .single();
 
-    if (fetchError) {
-        console.error('Error fetching visitor count:', fetchError);
+    if (error) {
+        console.error("Error fetching data:", error.message);
         return;
     }
 
-    const currentCount = data[column] || 0;
-    const newCount = currentCount + 1;
+    // Step 3: Parse the current value (e.g., "Visit 4")
+    let rawValue = data[currentMonth];
+    let currentCount = 0;
 
-    // Now, update the count
+    if (rawValue && typeof rawValue === "string" && rawValue.startsWith("Visit ")) {
+        currentCount = parseInt(rawValue.replace("Visit ", ""), 10) || 0;
+    }
+
+    // Step 4: Increment the value
+    let newCount = currentCount + 1;
+    let newValue = `Visit ${newCount}`;
+
+    // Step 5: Update the table
     const { error: updateError } = await supabase
-        .from('visitor_counter')
-        .update({ [column]: newCount })
-        .eq('id', 1);
+        .from("visitor_counter")
+        .update({ [currentMonth]: newValue })
+        .eq("website", website);
 
     if (updateError) {
-        console.error('Error updating visitor count:', updateError);
-    } else {
-        console.log(`Visitor count updated for ${domain}: ${newCount}`);
+        console.error("Error updating value:", updateError.message);
+        return;
     }
 }
 

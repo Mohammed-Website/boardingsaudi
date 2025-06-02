@@ -20,13 +20,14 @@ html {
 /* Centered container */
 .container {
   width: 100%;
-  max-width: 1200px;
-  background-color: #ffffff;
+  max-width: 100%;
+  background-color: #e0e0e0;
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
   text-align: center;
   margin: 0 auto;
+  margin-bottom: 200px;
 }
 
 .section-title {
@@ -70,7 +71,7 @@ html {
   border-radius: 0.8rem;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -78,13 +79,12 @@ html {
 }
 
 .offer-card:hover {
-  transform: translateY(-4px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
 /* Card Body */
 .card-body {
-  padding: 1.25rem;
+  padding: 0.8rem;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -114,7 +114,7 @@ html {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .image-thumbnail:hover {
@@ -186,7 +186,7 @@ html {
   }
   
   .card-body {
-    padding: 1rem;
+    padding: 0.2rem;
   }
   
   .offer-title {
