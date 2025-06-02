@@ -71,7 +71,7 @@ document.getElementById("offerForm").addEventListener("submit", function (e) {
     const returnDate = document.getElementById("returnDate").innerText;
     const countries = document.getElementById("countries").value;
     const cities = document.getElementById("cities").value;
-    const inclusions = Array.from(document.querySelectorAll(".inclusion:checked")).map(cb => cb.value);
+    const inclusions = Array.from(document.querySelectorAll("input[type='checkbox']:checked")).map(cb => cb.parentElement.querySelector("span").innerText.trim());
     const budgetType = document.getElementById("budgetType").value;
     const offerType = document.getElementById("offerType").value;
 
