@@ -372,7 +372,7 @@ function addImageField(url = '', alt = '', isExistingImage = false) {
 
             // Add fullscreen handler
             previewImg.addEventListener('click', () => {
-                openFullscreenImage(previewImg.src);
+                openFullscreenImage(URL.createObjectURL(file));
             });
 
             // Clean up object URL when done
