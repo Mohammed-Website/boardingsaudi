@@ -246,6 +246,7 @@ function createTitleCards(dataArray) {
     const mainTitle = document.createElement('h2');
     mainTitle.className = 'scrollable_section_title';
     mainTitle.textContent = 'عروضنا الخاصة';
+    mainTitle.style.textAlign = 'center';
     section.appendChild(mainTitle);
 
     const titlesContainer = document.createElement('div');
@@ -300,7 +301,17 @@ function createTitleCards(dataArray) {
 
         // Click handler
         titleCard.addEventListener('click', () => {
-            if (currentActiveIndex === index) return;
+
+            if (currentActiveIndex === index) {
+                // Scroll to view
+                document.getElementById('scrollable_cards_container_id').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+                return;
+            }
+
+
             document.querySelectorAll('.title_card').forEach(card => {
                 card.classList.remove('active');
             });
