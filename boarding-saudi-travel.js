@@ -534,7 +534,7 @@ function openFullScreenImage(src, text, index = 0) {
     const whatsappButton = document.createElement('a');
     whatsappButton.className = 'whatsapp_button';
     whatsappButton.innerHTML = '<ion-icon name="logo-whatsapp"></ion-icon> إرسال هذا العرض';
-    whatsappButton.href = `https://wa.me/+966506411444?text=💎%20طلب%20حجز%20عرض%20جديد%20💎%0A%0Aسلام%20عليكم،%20حاب%20أسأل%20عن%20عرض%0A*${encodeURIComponent(fullscreenImages[currentFullscreenIndex]?.alt || text)}*%0Aوحاب%20أعرف%20تفاصيل%20أكثر%20عن%20عروضكم%20المشابهة.%0A%0A🔗%20رابط%20صورة%20العرض:%0A${window.location.origin}/${encodeURIComponent(fullscreenImages[currentFullscreenIndex]?.src || src)}%0A%0Aبإنتظار%20ردكم%20وشكرًا%20لكم`;
+    whatsappButton.href = `https://wa.me/+966506411444?text=💎%20طلب%20حجز%20عرض%20جديد%20💎%0A%0Aسلام%20عليكم،%20حاب%20أسأل%20عن%20عرض%0A*${encodeURIComponent(fullscreenImages[currentFullscreenIndex]?.alt || text)}*%0Aوحاب%20أعرف%20تفاصيل%20أكثر%20عن%20عروضكم%20المشابهة.%0A%0A🔗%20رابط%20صورة%20العرض:%0A${encodeURIComponent(imageUrl)}%0A%0Aبإنتظار%20ردكم%20وشكرًا%20لكم`;
     whatsappButton.target = '_blank';
     whatsappButton.rel = 'noopener noreferrer';
 
@@ -619,7 +619,7 @@ function openFullScreenImage(src, text, index = 0) {
             // Update WhatsApp link
             const whatsappButton = fullScreenDiv.querySelector('.whatsapp_button');
             if (whatsappButton) {
-                whatsappButton.href = `https://wa.me/+966506411444?text=💎%20طلب%20حجز%20عرض%20جديد%20💎%0A%0Aسلام%20عليكم،%20حاب%20أسأل%20عن%20عرض%0A*${encodeURIComponent(currentImage.alt)}*%0Aوحاب%20أعرف%20تفاصيل%20أكثر%20عن%20عروضكم%20المشابهة.%0A%0A🔗%20رابط%20صورة%20العرض:%0A${window.location.origin}/${encodeURIComponent(currentImage.src)}%0A%0Aبإنتظار%20ردكم%20وشكرًا%20لكم`;
+                whatsappButton.href = `https://wa.me/+966506411444?text=💎%20طلب%20حجز%20عرض%20جديد%20💎%0A%0Aسلام%20عليكم،%20حاب%20أسأل%20عن%20عرض%0A*${encodeURIComponent(currentImage.alt)}*%0Aوحاب%20أعرف%20تفاصيل%20أكثر%20عن%20عروضكم%20المشابهة.%0A%0A🔗%20رابط%20صورة%20العرض:%0A${encodeURIComponent(imageUrl)}%0A%0Aبإنتظار%20ردكم%20وشكرًا%20لكم`;
             }
 
             // Update arrow visibility
